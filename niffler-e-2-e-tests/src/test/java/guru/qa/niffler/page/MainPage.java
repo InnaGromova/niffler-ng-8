@@ -16,6 +16,7 @@ public class MainPage {
   private final SelenideElement menu = $("ul[role='menu']");
   private final SelenideElement avatar = $("svg[data-testid='PersonIcon']");
   private final SelenideElement profile = $("li[role='menuitem'] a[href='/profile']");
+  private final SelenideElement friends = $("li[role='menuitem'] a[href='/people/friends']");
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription))
@@ -38,6 +39,13 @@ public class MainPage {
     avatar.click();
     menu.shouldBe(visible);
     profile.click();
+    return this;
+  }
+  public MainPage openFriends() {
+    headerBlock.shouldBe(visible);
+    avatar.click();
+    menu.shouldBe(visible);
+    friends.click();
     return this;
   }
 }
