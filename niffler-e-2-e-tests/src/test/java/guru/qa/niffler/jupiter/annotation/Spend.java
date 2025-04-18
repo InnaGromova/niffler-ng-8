@@ -14,7 +14,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
 public @interface Spend {
-  String username();
 
   String category();
 
@@ -23,4 +22,5 @@ public @interface Spend {
   double amount();
 
   CurrencyValues currency();
+
 }
