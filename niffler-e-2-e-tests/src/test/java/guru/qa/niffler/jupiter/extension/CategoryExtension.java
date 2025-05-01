@@ -1,9 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDBClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -13,7 +13,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-    private final SpendApiClient spendApiClient = new SpendApiClient();
+    private final SpendDBClient spendDBClient = new SpendDBClient();
 
     private final Random random = new Random();
 
@@ -29,17 +29,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 userAnno.username(),
                                 false
                         );
-                        CategoryJson createdCategory = spendApiClient.addCategory(categoryJson);
-                        if (categoryAnnotation.archived()) {
-                            CategoryJson categoryToBeArchived = new CategoryJson(
-                                    createdCategory.id(),
-                                    createdCategory.name(),
-                                    createdCategory.username(),
-                                    true
-                            );
-                            spendApiClient.updateCategory(categoryToBeArchived);
-                        }
-                        context.getStore(NAMESPACE).put(context.getUniqueId(), createdCategory);
+                        CategoryJson created = spendDBClient.createCategory(categoryJson);
+                        context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                     }
                 });
     }
@@ -62,6 +53,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 categoryFromStore.username(),
                 true
         );
-        spendApiClient.updateCategory(categoryToBeArchived);
+        spendDBClient.updateCategory(categoryToBeArchived);
     }
 }

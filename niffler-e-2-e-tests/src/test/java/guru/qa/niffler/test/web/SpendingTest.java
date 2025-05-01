@@ -20,7 +20,7 @@ public class SpendingTest {
                   archived = false
           ),
           spendings = @Spend(
-          category = "Обучение",
+          category = "Обучение2",
           description = "Обучение Niffler 2.0",
           amount = 89000.00,
           currency = CurrencyValues.RUB
