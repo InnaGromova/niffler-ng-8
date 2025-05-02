@@ -3,6 +3,7 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -12,9 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BrowserExtension.class)
 public class ProfileTest {
     private static final Config CFG = Config.getInstance();
-    @Category(
+    @User(
             username = "test-user1",
-            archived = false
+            categories = @Category(
+                    archived = false
+            )
     )
     @Test
     void CheckingDisplayArchiveCategory(CategoryJson category) {
@@ -27,10 +30,11 @@ public class ProfileTest {
                 .clickOnShowArchiveCategories()
                 .checkArchivedCategoryInList(category.name());
     }
-
-    @Category(
+    @User(
             username = "test-user1",
-            archived = true
+            categories = @Category(
+                    archived = false
+            )
     )
     @Test
     void activeCategoryShouldBePresentedInListAfterRestored(CategoryJson category) {
