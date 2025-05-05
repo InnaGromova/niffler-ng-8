@@ -1,5 +1,5 @@
 package guru.qa.niffler.data.dao;
-import guru.qa.niffler.data.entity.spend.UserEntity;
+import guru.qa.niffler.data.entity.UserEntity;
 
 import java.util.Optional;
 import java.util.UUID;

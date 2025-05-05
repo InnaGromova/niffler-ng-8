@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.dao;
 
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.CategoryEntity;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -12,5 +12,5 @@ public interface CategoryDao {
     Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName);
     void deleteCategory(CategoryEntity category);
 
-    Optional<CategoryEntity> updateCategory(CategoryEntity category);
+    CategoryEntity updateCategory(CategoryEntity category);
 }

@@ -1,36 +1,52 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.data.dao.UserDataDao;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.Databases;
+import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoJdbc;
+import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.entity.spend.UserEntity;
+import guru.qa.niffler.data.entity.AuthAuthorityEntity;
+import guru.qa.niffler.data.entity.AuthUserEntity;
+import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.values.AuthorityType;
 
-import java.util.NoSuchElementException;
+import java.sql.Connection;
 import java.util.UUID;
 
-public class UserDBClient {
-    private final UserDataDao userDao = new UserdataUserDaoJdbc();
+import static guru.qa.niffler.data.Databases.xaTransaction;
 
-    public UserJson createUser(UserJson user) {
-        UserEntity userEntity = UserEntity.fromJson(user);
-        return UserJson.fromEntity(
-                userDao.createUser(userEntity)
+public class UserDBClient {
+    private static final Config CFG = Config.getInstance();
+
+    public void createUser(UserJson user) {
+        xaTransaction(
+                Connection.TRANSACTION_READ_COMMITTED,
+
+                new Databases.XaConsumer(
+                        connection -> {
+                            new UserdataUserDaoJdbc(connection)
+                                    .createUser(UserEntity.fromJson(user));
+                        },
+                        CFG.userdataJdbcUrl()
+                ),
+
+                new Databases.XaConsumer(
+                        connection -> {
+                            AuthUserDaoJdbc authDao = new AuthUserDaoJdbc(connection);
+                            AuthAuthorityDaoJdbc authorityDao = new AuthAuthorityDaoJdbc(connection);
+
+                            UUID userId = authDao.create(AuthUserEntity.fromJson(user)).getId();
+
+                            for (AuthorityType authority : AuthorityType.values()) {
+                                AuthAuthorityEntity authAuthority = new AuthAuthorityEntity();
+                                authAuthority.setUserId(userId);
+                                authAuthority.setAuthority(authority.getValue());
+                                authorityDao.create(authAuthority);
+                            }
+                        },
+                        CFG.authJdbcUrl()
+                )
         );
-    }
-    public void delete(UserJson user) {
-        UserEntity userEntity = UserEntity.fromJson(user);
-        userDao.delete(userEntity);
-    }
-    public UserJson findByUsername(String username) {
-        return userDao.findByUsername(username)
-                .map(UserJson::fromEntity).orElseThrow(
-                        () -> new NoSuchElementException("Can`t find user.")
-                );
-    }
-    public UserJson findById(UUID id) {
-        return userDao.findById(id)
-                .map(UserJson::fromEntity).orElseThrow(
-                        () -> new NoSuchElementException("Can`t find user.")
-                );
     }
 }

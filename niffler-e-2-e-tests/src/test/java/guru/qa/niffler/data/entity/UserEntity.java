@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.entity.spend;
+package guru.qa.niffler.data.entity;
 
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
@@ -24,7 +24,6 @@ public class UserEntity implements Serializable {
 
     public static UserEntity fromJson(UserJson json) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(json.id());
         userEntity.setUsername(json.username());
         userEntity.setSurname(json.surname());
         userEntity.setFullname(json.fullname());
