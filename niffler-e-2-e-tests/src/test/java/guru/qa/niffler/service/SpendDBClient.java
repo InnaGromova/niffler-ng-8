@@ -1,7 +1,7 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.CategotyDaoJdbc;
+import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
@@ -18,7 +18,7 @@ public class SpendDBClient {
         return transaction(connection -> {
                     SpendEntity spendEntity = SpendEntity.fromJson(spend);
                     if (spendEntity.getCategory() != null) {
-                        CategotyDaoJdbc categoryDao = new CategotyDaoJdbc(connection);
+                        CategoryDaoJdbc categoryDao = new CategoryDaoJdbc(connection);
                         spendEntity.setCategory(
                                 categoryDao.findCategoryByUsernameAndCategoryName(
                                         spendEntity.getUsername(),
@@ -37,7 +37,7 @@ public class SpendDBClient {
         return transaction(connection -> {
                     CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
                     return CategoryJson.fromEntity(
-                            new CategotyDaoJdbc(connection).create(categoryEntity)
+                            new CategoryDaoJdbc(connection).create(categoryEntity)
                     );
                 },
                 CFG.spendJdbcUrl(),
@@ -45,7 +45,7 @@ public class SpendDBClient {
     }
     public CategoryJson updateCategory(CategoryJson category) {
         return transaction(connection -> {
-                    return CategoryJson.fromEntity(new CategotyDaoJdbc(connection).updateCategory(CategoryEntity.fromJson(category)));
+                    return CategoryJson.fromEntity(new CategoryDaoJdbc(connection).updateCategory(CategoryEntity.fromJson(category)));
                 },
                 CFG.spendJdbcUrl(),
                 Connection.TRANSACTION_READ_COMMITTED

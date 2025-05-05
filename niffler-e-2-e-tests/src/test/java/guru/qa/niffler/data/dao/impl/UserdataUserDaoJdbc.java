@@ -1,11 +1,12 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.UserDataDao;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -79,6 +80,31 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
             catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public List<UserEntity> findAll() {
+        List<UserEntity> ueList = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"user\""
+        )) {
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    UserEntity result = new UserEntity();
+                    result.setId(rs.getObject("id", UUID.class));
+                    result.setUsername(rs.getString("username"));
+                    result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    result.setFirstname(rs.getString("firstname"));
+                    result.setSurname(rs.getString("surname"));
+                    result.setPhoto(rs.getBytes("photo"));
+                    result.setPhotoSmall(rs.getBytes("photo_small"));
+                    ueList.add(result);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find users", e);
+        }
+        return ueList;
     }
 
         @Override

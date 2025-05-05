@@ -1,13 +1,14 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
@@ -45,5 +46,33 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public List<AuthUserEntity> findAll() {
+
+        List<AuthUserEntity> authUserEntities = new ArrayList<>();
+
+        try(PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"user\""
+        )) {
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+
+                while (rs.next()) {
+                    AuthUserEntity authUser = new AuthUserEntity();
+                    authUser.setId(rs.getObject("id", UUID.class));
+                    authUser.setUsername(rs.getString("username"));
+                    authUser.setPassword(rs.getString("password"));
+                    authUser.setEnabled(rs.getBoolean("enabled"));
+                    authUser.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    authUser.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    authUser.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+                    authUserEntities.add(authUser);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return authUserEntities;
     }
 }
