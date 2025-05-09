@@ -10,7 +10,7 @@ public interface CategoryDao {
     CategoryEntity create(CategoryEntity category);
 
     Optional<CategoryEntity> findCategoryById(UUID id);
-    List<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName);
+    Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName);
 
     List<CategoryEntity> findAll();
 

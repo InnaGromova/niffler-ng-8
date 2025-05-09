@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import static guru.qa.niffler.data.tpl.Connections.holder;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,15 +14,11 @@ import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
     private static final Config CFG = Config.getInstance();
-    private final Connection connection;
-    public AuthUserDaoJdbc (Connection connection) {
-        this.connection = connection;
-    }
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
     public AuthUserEntity create(AuthUserEntity authUser) {
-            try (PreparedStatement ps = connection.prepareStatement(
+            try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                     "INSERT INTO \"user\" (username, password, enabled,account_non_expired," +
                             "account_non_locked,credentials_non_expired)" +
                             "VALUES (?, ?, ?, ?, ?, ?)",
@@ -52,7 +49,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
         List<AuthUserEntity> authUserEntities = new ArrayList<>();
 
-        try(PreparedStatement ps = connection.prepareStatement(
+        try(PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\""
         )) {
             ps.execute();
