@@ -57,7 +57,7 @@ public class UserDBClient {
                             e -> {
                                 AuthAuthorityEntity authAuthority = new AuthAuthorityEntity();
                                 authAuthority.setId(createdAuthUser.getId());
-                                authAuthority.setAuthority(String.valueOf(e));
+                                authAuthority.setAuthority(AuthorityType.valueOf(String.valueOf(e)));
                                 return authAuthority;
                             }
                     ).toArray(AuthAuthorityEntity[]::new);
@@ -86,7 +86,7 @@ public class UserDBClient {
                     e -> {
                         AuthAuthorityEntity ae = new AuthAuthorityEntity();
                         ae.setId(createdAuthUser.getId());
-                        ae.setAuthority(String.valueOf(e));
+                        ae.setAuthority(AuthorityType.valueOf(String.valueOf(e)));
                         return ae;
                     }).toArray(AuthAuthorityEntity[]::new);
             authAuthorityDaoSpringJdbc.create(userAuthorities);
@@ -110,7 +110,7 @@ public class UserDBClient {
                 e -> {
                     AuthAuthorityEntity ae = new AuthAuthorityEntity();
                     ae.setId(createdAuthUser.getId());
-                    ae.setAuthority(String.valueOf(e));
+                    ae.setAuthority(AuthorityType.valueOf(String.valueOf(e)));
                     return ae;
                 }
         ).toArray(AuthAuthorityEntity[]::new);

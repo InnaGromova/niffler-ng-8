@@ -8,4 +8,5 @@ public interface AuthUserDao {
     AuthUserEntity create(AuthUserEntity authUser);
 
     List<AuthUserEntity> findAll();
+    List<AuthUserEntity> findAllWithAuthorities();
 }

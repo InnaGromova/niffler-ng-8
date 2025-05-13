@@ -1,18 +1,22 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
+import guru.qa.niffler.data.repository.AuthUserRepository;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import static guru.qa.niffler.data.tpl.Connections.holder;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AuthUserDaoJdbc implements AuthUserDao {
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
+public class AuthUserRepositoryJdbc implements AuthUserRepository {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
@@ -71,10 +75,5 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             throw new RuntimeException(e);
         }
         return authUserEntities;
-    }
-
-    @Override
-    public List<AuthUserEntity> findAllWithAuthorities() {
-        return null;
     }
 }

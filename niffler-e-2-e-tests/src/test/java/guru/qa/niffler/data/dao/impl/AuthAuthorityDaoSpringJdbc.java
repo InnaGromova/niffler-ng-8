@@ -27,7 +27,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setObject(1, authorities[i].getId());
-                        ps.setString(2, authorities[i].getAuthority());
+                        ps.setString(2, String.valueOf(authorities[i].getAuthority()));
                     }
 
                     @Override
