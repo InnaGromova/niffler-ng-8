@@ -49,6 +49,11 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        return null;
+    }
+
+    @Override
     public  Optional<UserEntity> findById(UUID id) {
             try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                     "SELECT * FROM \"user\" WHERE id = ?",

@@ -10,6 +10,7 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
@@ -44,6 +45,12 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Optional<AuthUserEntity> findById(UUID id) {
+        return Optional.empty();
+    }
+
     @Override
     public List<AuthUserEntity> findAll() {
 
@@ -75,6 +82,11 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     @Override
     public List<AuthUserEntity> findAllWithAuthorities() {
+        return null;
+    }
+
+    @Override
+    public AuthUserEntity update(AuthUserEntity user) {
         return null;
     }
 }

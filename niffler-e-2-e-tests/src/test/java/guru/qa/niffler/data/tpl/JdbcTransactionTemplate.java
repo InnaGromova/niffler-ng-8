@@ -9,11 +9,10 @@ import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 public class JdbcTransactionTemplate {
     private final JdbcConnectionHolder holder;
     private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
-
     public JdbcTransactionTemplate(String jdbcUrl) {
         this.holder = Connections.holder(jdbcUrl);
     }
-    public JdbcTransactionTemplate holdConnectionAfterAction(){
+    public JdbcTransactionTemplate holdConnectionAfterAction() {
         this.closeAfterAction.set(false);
         return this;
     }
@@ -43,7 +42,6 @@ public class JdbcTransactionTemplate {
             }
         }
     }
-
     public <T> T execute(Supplier<T> action) {
         return execute(action, TRANSACTION_READ_COMMITTED);
     }

@@ -26,7 +26,7 @@ public record UserJson(
         @JsonProperty("password")
         String password
 ) {
-    public static UserJson fromEntity(UserEntity entity) {
+    public static UserJson fromEntity(UserEntity entity, Object o) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),

@@ -26,8 +26,6 @@ public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
 
         CategoryEntity category = new CategoryEntity();
         category.setId(rs.getObject("category_id", UUID.class));
-        category.setName(rs.getString("category_name"));
-        category.setUsername(rs.getString("category_username"));
 
         spend.setCategory(category);
         return spend;

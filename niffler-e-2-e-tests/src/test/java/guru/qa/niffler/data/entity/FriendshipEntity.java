@@ -5,9 +5,9 @@ import guru.qa.niffler.values.FriendshipStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.hibernate.proxy.HibernateProxy;
+import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -15,19 +15,32 @@ import java.util.UUID;
 @Table(name = "friendship")
 public class FriendshipEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @ManyToOne
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
+    private UserEntity requester;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "addressee_id", referencedColumnName = "id")
+    private UserEntity addressee;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
-
-    @Column(name = "friend_id", nullable = false)
-    private UUID friendId;
+    @Column(name = "created_date", columnDefinition = "DATE", nullable = false)
+    private Date createdDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private FriendshipStatus status;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        FriendshipEntity that = (FriendshipEntity) o;
+        return getRequester() != null && Objects.equals(getRequester(), that.getRequester())
+                && getAddressee() != null && Objects.equals(getAddressee(), that.getAddressee());
+    }
+    @Override
+    public final int hashCode() {
+        return Objects.hash(requester, addressee);
+    }
 }

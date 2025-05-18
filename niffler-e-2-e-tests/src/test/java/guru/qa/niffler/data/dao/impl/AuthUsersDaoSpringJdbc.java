@@ -14,9 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class AuthUserDaoSpringJdbc implements AuthUserDao {
+public class AuthUsersDaoSpringJdbc implements AuthUserDao {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     @Override
@@ -41,6 +42,17 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         authUser.setId(generatedKey);
         return authUser;
     }
+    @Override
+    public Optional<AuthUserEntity> findById(UUID id) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM \"user\" WHERE id = ?",
+                        AuthUserEntityRowMapper.instance,
+                        id
+                )
+        );
+    }
 
     @Override
     public List<AuthUserEntity> findAll() {
@@ -61,5 +73,24 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
                         "LEFT JOIN authority a ON u.id = a.user_id",
                 new AuthUserWithAuthoritiesExtractor()
         );
+    }
+    @Override
+    public AuthUserEntity update(AuthUserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        jdbcTemplate.update(
+                "UPDATE \"user\" SET " +
+                        "username = ?, password = ?, enabled = ?, " +
+                        "account_non_expired = ?, account_non_locked = ?, " +
+                        "credentials_non_expired = ? " +
+                        "WHERE id = ?",
+                user.getUsername(),
+                user.getPassword(),
+                user.getEnabled(),
+                user.getAccountNonExpired(),
+                user.getAccountNonLocked(),
+                user.getCredentialsNonExpired(),
+                user.getId()
+        );
+        return user;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpendDaoSpringJdbc implements SpendDao {
+public class SpendsDaoSpringJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
     @Override
     public SpendEntity create(SpendEntity spend) {
@@ -56,6 +56,16 @@ public class SpendDaoSpringJdbc implements SpendDao {
                 "SELECT * FROM spend",
                 SpendEntityRowMapper.instance
         );
+    }
+
+    @Override
+    public SpendEntity update(SpendEntity spend) {
+        return null;
+    }
+
+    @Override
+    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
+        return Optional.empty();
     }
 
     @Override

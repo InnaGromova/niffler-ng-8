@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface UserDataDao {
     UserEntity createUser(UserEntity user);
+    UserEntity update(UserEntity user);
 
     Optional<UserEntity> findById(UUID id);
 
