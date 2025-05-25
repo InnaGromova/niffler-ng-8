@@ -19,16 +19,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDBClient implements SpendsClient {
-    private final SpendRepository spendRepository;
+    private final SpendRepository spendRepository = new SpendRepositoryHibernate();
     private static final Config CFG = Config.getInstance();
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
     private final SpendDao spendDao = new SpendDaoJdbc();
     private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
             CFG.spendJdbcUrl()
     );
-    public SpendDBClient(SpendRepository spendRepository) {
-        this.spendRepository = spendRepository;
-    }
 
     private final JdbcTransactionTemplate jdbcTrTemplate = new JdbcTransactionTemplate(
             CFG.spendJdbcUrl()

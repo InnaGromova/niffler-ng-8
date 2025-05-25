@@ -15,7 +15,7 @@ import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class UserdataUserRepositoryHibernate implements UserDataRepository {
     private final Config CFG = Config.getInstance();
-    private final EntityManager entityManager = em(CFG.spendJdbcUrl());
+    private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
     @Override
     public UserEntity createUser(UserEntity user) {
         entityManager.joinTransaction();

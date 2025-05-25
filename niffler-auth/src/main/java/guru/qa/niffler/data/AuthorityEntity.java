@@ -25,7 +25,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "authority")
-public class AuthAuthorityEntity implements Serializable {
+public class AuthorityEntity implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
@@ -46,7 +46,7 @@ public class AuthAuthorityEntity implements Serializable {
     Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
     Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
     if (thisEffectiveClass != oEffectiveClass) return false;
-    AuthAuthorityEntity that = (AuthAuthorityEntity) o;
+    AuthorityEntity that = (AuthorityEntity) o;
     return getId() != null && Objects.equals(getId(), that.getId());
   }
 

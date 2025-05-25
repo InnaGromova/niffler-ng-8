@@ -1,13 +1,12 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.UserJson;
 
 import java.util.Optional;
 
 public interface UsersClient {
 
-    UserJson createUser(String username, String password) throws Exception;
+    UserJson createUser(String username, String password);
 
     void createFriends(UserJson user, int count) throws Exception;
 
