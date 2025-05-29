@@ -17,13 +17,18 @@ public class MainPage {
   private final SelenideElement avatar = $("svg[data-testid='PersonIcon']");
   private final SelenideElement profile = $("li[role='menuitem'] a[href='/profile']");
   private final SelenideElement friends = $("li[role='menuitem'] a[href='/people/friends']");
+  private final SelenideElement searchField = $("input[placeholder='Search']");
 
   public EditSpendingPage editSpending(String spendingDescription) {
+    findSpending(spendingDescription);
     tableRows.find(text(spendingDescription))
         .$$("td")
         .get(5)
         .click();
     return new EditSpendingPage();
+  }
+  public void findSpending(String spendingDescription) {
+    searchField.setValue(spendingDescription).pressEnter();
   }
 
   public void checkThatTableContains(String spendingDescription) {

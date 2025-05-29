@@ -1,9 +1,10 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.entity.SpendEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,19 +23,23 @@ public record SpendJson(
     String description,
     @JsonProperty("username")
     String username) {
-    public static  SpendJson fromEntity( SpendEntity entity) {
+    public static @Nonnull SpendJson fromEntity(@Nonnull SpendEntity entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("SpendEntity cannot be null");
+        }
+
         final CategoryEntity category = entity.getCategory();
         final String username = entity.getUsername();
 
         return new SpendJson(
                 entity.getId(),
                 entity.getSpendDate(),
-                new CategoryJson(
+                category != null ? new CategoryJson(
                         category.getId(),
                         category.getName(),
                         username,
                         category.isArchived()
-                ),
+                ) : null,
                 entity.getCurrency(),
                 entity.getAmount(),
                 entity.getDescription(),

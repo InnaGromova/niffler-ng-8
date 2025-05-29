@@ -5,6 +5,7 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
 import org.junit.jupiter.api.Test;
@@ -14,15 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class ProfileTest {
     private static final Config CFG = Config.getInstance();
     @User(
-            username = "test-user1",
             categories = @Category(
                     archived = false
             )
     )
     @Test
-    void CheckingDisplayArchiveCategory(CategoryJson category) {
+    void CheckingDisplayArchiveCategory(UserJson user) {
+        final CategoryJson category = user.testData().categories().getFirst();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("test-user1", "test1")
+                .doLogin(user.username(), user.testData().password())
                 .openMenuProfile();
         new ProfilePage()
                 .archiveCategory(category.name())
@@ -37,14 +38,14 @@ public class ProfileTest {
             )
     )
     @Test
-    void activeCategoryShouldBePresentedInListAfterRestored(CategoryJson category) {
+    void activeCategoryShouldBePresentedInListAfterRestored(CategoryJson[] category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin("test-user1", "test1")
                 .openMenuProfile();
         new ProfilePage()
                 .clickOnShowArchiveCategories()
-                .activateCategory(category.name())
+                .activateCategory(category[0].name())
                 .confirmActivateCategory()
-                .checkActiveCategoryInList(category.name());
+                .checkActiveCategoryInList(category[0].name());
     }
 }

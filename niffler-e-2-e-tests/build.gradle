@@ -16,6 +16,7 @@ buildscript {
         saajVersion = '3.0.4'
         jakartaJaxbVersion = '4.0.2'
         springDataCommonsVersion = '3.3.3'
+        atomikosVersion = '6.0.0'
         wiremockVersion = '3.0.1'
         fakerVersion = '1.0.2'
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
@@ -80,6 +81,9 @@ dependencies {
     // DB
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
+    testImplementation "com.atomikos:transactions-jta:${atomikosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-hibernate4:${atomikosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-jdbc:${atomikosVersion}"
     testImplementation "p6spy:p6spy:${p6spyVersion}"
     testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
     testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
@@ -102,6 +106,7 @@ dependencies {
     testImplementation 'commons-io:commons-io:2.16.1'
     testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
+    testImplementation 'com.github.h-thurow:simple-jndi:0.25.0'
     // gRPC
     testImplementation "io.grpc:grpc-api:${project.ext.grpcVersion}"
     testImplementation "io.grpc:grpc-stub:${project.ext.grpcVersion}"
