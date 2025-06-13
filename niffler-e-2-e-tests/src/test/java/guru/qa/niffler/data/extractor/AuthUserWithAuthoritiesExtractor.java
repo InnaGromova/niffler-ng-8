@@ -1,7 +1,7 @@
 package guru.qa.niffler.data.extractor;
 import guru.qa.niffler.data.entity.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.values.AuthorityType;
+import guru.qa.niffler.data.entity.Authority;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -34,7 +34,7 @@ public class AuthUserWithAuthoritiesExtractor implements ResultSetExtractor<List
             if (authorityId != null) {
                 AuthAuthorityEntity authority = new AuthAuthorityEntity();
                 authority.setId(authorityId);
-                authority.setAuthority(AuthorityType.valueOf(rs.getString("authority")));
+                authority.setAuthority(Authority.valueOf(rs.getString("authority")));
                 authority.setUser(user);
                 user.getAuthorities().add(authority);
             }

@@ -3,27 +3,22 @@ package guru.qa.niffler.service.impl;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUserName;
 
-import guru.qa.niffler.data.jpa.EntityManagers;
+import guru.qa.niffler.data.entity.Authority;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserDataRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.service.UsersClient;
-import jakarta.persistence.EntityManager;
 import jaxb.userdata.FriendshipStatus;
-import org.springframework.transaction.support.TransactionTemplate;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.values.AuthorityType;
-import org.springframework.data.transaction.ChainedTransactionManager;
-import org.springframework.jdbc.support.JdbcTransactionManager;
-
-import static guru.qa.niffler.data.tpl.DataSources.dataSource;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -35,6 +30,7 @@ public class UserDBClient implements UsersClient {
     private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(), CFG.userdataJdbcUrl()
     );
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
     public UserJson createUser(String username, String password) {
@@ -129,13 +125,13 @@ public class UserDBClient implements UsersClient {
     private AuthUserEntity authUserEntity(String username, String password) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(username);
-        authUser.setPassword(password);
+        authUser.setPassword(passwordEncoder.encode(password));
         authUser.setEnabled(true);
         authUser.setAccountNonExpired(true);
         authUser.setAccountNonLocked(true);
         authUser.setCredentialsNonExpired(true);
         authUser.setAuthorities(
-                Arrays.stream(AuthorityType.values()).map(
+                Arrays.stream(Authority.values()).map(
                         e -> {
                             AuthAuthorityEntity ae = new AuthAuthorityEntity();
                             ae.setUser(authUser);

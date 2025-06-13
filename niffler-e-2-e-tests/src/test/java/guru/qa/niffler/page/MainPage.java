@@ -1,12 +1,22 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.utils.ScreenDiffResult;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
 
@@ -18,6 +28,8 @@ public class MainPage {
   private final SelenideElement profile = $("li[role='menuitem'] a[href='/profile']");
   private final SelenideElement friends = $("li[role='menuitem'] a[href='/people/friends']");
   private final SelenideElement searchField = $("input[placeholder='Search']");
+  private final SelenideElement diagram = $("canvas[role='img']");
+  private final ElementsCollection statCategories = $$("#legend-container li");
 
   public EditSpendingPage editSpending(String spendingDescription) {
     findSpending(spendingDescription);
@@ -40,6 +52,7 @@ public class MainPage {
     headerBlock.shouldBe(visible);
   }
   public MainPage openMenuProfile() {
+    Selenide.sleep(10000);
     headerBlock.shouldBe(visible);
     avatar.click();
     menu.shouldBe(visible);
@@ -53,4 +66,18 @@ public class MainPage {
     friends.click();
     return this;
   }
+  public MainPage checkDiagramm(BufferedImage expected) throws IOException {
+    Selenide.sleep(10000);
+    BufferedImage actual = ImageIO.read(Objects.requireNonNull(diagram.screenshot()));
+    assertFalse(new ScreenDiffResult(
+            expected,
+            actual
+    ));
+    return this;
+  }
+  public MainPage shouldHaveStatSpend(List<String> expectedCategories) {
+    statCategories.shouldHave(CollectionCondition.texts(expectedCategories));
+    return this;
+  }
+
 }
