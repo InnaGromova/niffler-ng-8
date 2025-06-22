@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
+public class CategoryExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
     private final SpendsClient spendDBClient = new SpendDBClient();
@@ -69,17 +69,20 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 .stream()
                 .toArray(CategoryJson[]::new);
     }
-    @Override
-    public void afterTestExecution(ExtensionContext context) {
-        CategoryJson categoryFromStore =
-                context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-
-        CategoryJson categoryToBeArchived = new CategoryJson(
-                categoryFromStore.id(),
-                categoryFromStore.name(),
-                categoryFromStore.username(),
-                true
-        );
-        spendDBClient.updateCategory(categoryToBeArchived);
-    }
+//    @Override
+//    public void afterTestExecution(ExtensionContext context) {
+//        CategoryJson categoryFromStore =
+//                context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+//        if (categoryFromStore == null) {
+//            throw new IllegalStateException("Category is not initialized");
+//        }
+//        System.out.println("Category ID: " + categoryFromStore.id());
+//        CategoryJson categoryToBeArchived = new CategoryJson(
+//                categoryFromStore.id(),
+//                categoryFromStore.name(),
+//                categoryFromStore.username(),
+//                true
+//        );
+//        spendDBClient.updateCategory(categoryToBeArchived);
+//    }
 }

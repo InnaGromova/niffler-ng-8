@@ -1,15 +1,17 @@
 package guru.qa.niffler.data.tpl;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
-import guru.qa.niffler.data.jpa.EntityManagers;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class XaTransactionTemplate {
+
     private final JdbcConnectionHolders holders;
     private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
 
@@ -22,7 +24,9 @@ public class XaTransactionTemplate {
         return this;
     }
 
-    public <T> T execute(Supplier<T>... actions) throws Exception {
+    @SafeVarargs
+    @Nullable
+    public final <T> T execute(Supplier<T>... actions) throws Exception {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();

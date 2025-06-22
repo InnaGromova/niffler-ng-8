@@ -1,11 +1,14 @@
 package guru.qa.niffler.service.impl;
 
-import guru.qa.niffler.api.SpendApi;
+
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.SpendsApi;
 import guru.qa.niffler.service.SpendsClient;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,13 +21,20 @@ import java.util.UUID;
 
 public class SpendApiClient implements SpendsClient {
     private static final Config CFG = Config.getInstance();
-    private final OkHttpClient client = new OkHttpClient.Builder().build();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .addNetworkInterceptor(
+                    new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addNetworkInterceptor(
+                    new AllureOkHttp3()
+                            .setRequestTemplate("request.ftl")
+                            .setResponseTemplate("response.ftl")
+            ).build();
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(CFG.spendUrl())
             .client(client)
             .addConverterFactory(JacksonConverterFactory.create())
             .build();
-    private final SpendApi spendApi = retrofit.create(SpendApi.class);
+    private final SpendsApi spendApi = retrofit.create(SpendsApi.class);
 
     private <T> T executeCall(Call<T> call){
         final Response<T> response;
@@ -61,7 +71,7 @@ public class SpendApiClient implements SpendsClient {
 
     @Override
     public void deleteSpend(SpendJson spendJson) throws Exception {
-        executeCall(spendApi.deleteSpends(spendJson.username(), Collections.singletonList(spendJson.id().toString())));
+        executeCall(spendApi.removeSpend(spendJson.username(), Collections.singletonList(spendJson.id().toString())));
     }
 
     @Override
