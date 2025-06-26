@@ -4,6 +4,8 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.SpendConditions;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.utils.ScreenDiffResult;
 
 import javax.imageio.ImageIO;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
 
+  private final StatComponent statComponent = new StatComponent();
   private final ElementsCollection tableRows = $$("#spendings tbody tr");
   private final SelenideElement spendingTable = $("#spendings");
   private final SelenideElement headerBlock = $("#root header");
@@ -30,7 +33,11 @@ public class MainPage {
   private final SelenideElement searchField = $("input[placeholder='Search']");
   private final SelenideElement diagram = $("canvas[role='img']");
   private final ElementsCollection statCategories = $$("#legend-container li");
+  private SpendTable spendTable = new SpendTable();
 
+  public StatComponent getStatComponent() {
+    return statComponent;
+  }
   public EditSpendingPage editSpending(String spendingDescription) {
     findSpending(spendingDescription);
     tableRows.find(text(spendingDescription))
@@ -79,5 +86,9 @@ public class MainPage {
     statCategories.shouldHave(CollectionCondition.texts(expectedCategories));
     return this;
   }
-
+  public MainPage checkSpendsTable(SpendJson... expectedSpends) {
+    Selenide.sleep(10000);
+    spendTable.getTableRows().should(SpendConditions.spends(expectedSpends));
+    return this;
+  }
 }
