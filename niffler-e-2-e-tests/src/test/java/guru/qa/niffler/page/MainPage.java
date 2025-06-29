@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.SpendConditions;
 import guru.qa.niffler.model.SpendJson;
@@ -23,17 +24,42 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class MainPage {
 
   private final StatComponent statComponent = new StatComponent();
-  private final ElementsCollection tableRows = $$("#spendings tbody tr");
-  private final SelenideElement spendingTable = $("#spendings");
-  private final SelenideElement headerBlock = $("#root header");
-  private final SelenideElement menu = $("ul[role='menu']");
-  private final SelenideElement avatar = $("svg[data-testid='PersonIcon']");
-  private final SelenideElement profile = $("li[role='menuitem'] a[href='/profile']");
-  private final SelenideElement friends = $("li[role='menuitem'] a[href='/people/friends']");
-  private final SelenideElement searchField = $("input[placeholder='Search']");
-  private final SelenideElement diagram = $("canvas[role='img']");
-  private final ElementsCollection statCategories = $$("#legend-container li");
+  private final ElementsCollection tableRows;
+  private final SelenideElement spendingTable;
+  private final SelenideElement headerBlock;
+  private final SelenideElement menu;
+  private final SelenideElement avatar;
+  private final SelenideElement profile;
+  private final SelenideElement friends;
+  private final SelenideElement searchField;
+  private final SelenideElement diagram;
+  private final ElementsCollection statCategories;
   private SpendTable spendTable = new SpendTable();
+
+  public MainPage(SelenideDriver driver){
+    this.tableRows = driver.$$("#spendings tbody tr");
+    this.spendingTable = driver.$("#spendings");
+    this.headerBlock = driver.$("#root header");
+    this.menu = driver.$("ul[role='menu']");
+    this.avatar = driver.$("svg[data-testid='PersonIcon']");
+    this.profile = driver.$("li[role='menuitem'] a[href='/profile']");
+    this.friends = driver.$("li[role='menuitem'] a[href='/people/friends']");
+    this.searchField = driver.$("input[placeholder='Search']");
+    this.diagram = driver.$("canvas[role='img']");
+    this.statCategories = driver.$$("#legend-container li");
+  }
+  public MainPage(){
+    this.tableRows = $$("#spendings tbody tr");
+    this.spendingTable = $("#spendings");
+    this.headerBlock = $("#root header");
+    this.menu = $("ul[role='menu']");
+    this.avatar = $("svg[data-testid='PersonIcon']");
+    this.profile = $("li[role='menuitem'] a[href='/profile']");
+    this.friends = $("li[role='menuitem'] a[href='/people/friends']");
+    this.searchField = $("input[placeholder='Search']");
+    this.diagram = $("canvas[role='img']");
+    this.statCategories = $$("#legend-container li");
+  }
 
   public StatComponent getStatComponent() {
     return statComponent;

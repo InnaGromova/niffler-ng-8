@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import org.openqa.selenium.By;
@@ -17,13 +18,32 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ProfilePage {
-    private final ElementsCollection activeCategories = $$(By.xpath("//div[contains(@class, 'MuiChip-colorPrimary')]/parent::div"));
-    private final ElementsCollection archivedCategories = $$(By.xpath("//div[contains(@class, 'MuiChip-colorDefault')]/parent::div"));
-    private final SelenideElement archiveButton = $x("//button[text()='Archive']");
-    private final SelenideElement restoreButton = $x("//button[text()='Unarchive']");
-    private final SelenideElement showArchiveCategories = $(By.xpath("//input[contains(@class, 'MuiSwitch-input')]"));
-    private final SelenideElement uploadPictureButton = $("input[type='file']");
-    private final SelenideElement avatar = $(".MuiAvatar-img");
+    private final ElementsCollection activeCategories;
+    private final ElementsCollection archivedCategories;
+    private final SelenideElement archiveButton;
+    private final SelenideElement restoreButton;
+    private final SelenideElement showArchiveCategories;
+    private final SelenideElement uploadPictureButton;
+    private final SelenideElement avatar;
+    public ProfilePage(SelenideDriver driver){
+        this.activeCategories = driver.$$(By.xpath("//div[contains(@class, 'MuiChip-colorPrimary')]/parent::div"));
+        this.archivedCategories = driver.$$(By.xpath("//div[contains(@class, 'MuiChip-colorDefault')]/parent::div"));
+        this.archiveButton = driver.$x("//button[text()='Archive']");
+        this.restoreButton = driver.$x("//button[text()='Unarchive']");
+        this.showArchiveCategories = driver.$(By.xpath("//input[contains(@class, 'MuiSwitch-input')]"));
+        this.uploadPictureButton = driver.$("input[type='file']");
+        this.avatar = driver.$(".MuiAvatar-img");
+
+    }
+    public ProfilePage(){
+        this.activeCategories = $$(By.xpath("//div[contains(@class, 'MuiChip-colorPrimary')]/parent::div"));
+        this.archivedCategories = $$(By.xpath("//div[contains(@class, 'MuiChip-colorDefault')]/parent::div"));
+        this.archiveButton = $x("//button[text()='Archive']");
+        this.restoreButton = $x("//button[text()='Unarchive']");
+        this.showArchiveCategories = $(By.xpath("//input[contains(@class, 'MuiSwitch-input')]"));
+        this.uploadPictureButton = $("input[type='file']");
+        this.avatar = $(".MuiAvatar-img");
+    }
 
 
     public void checkActiveCategoryInList(String categoryName) {

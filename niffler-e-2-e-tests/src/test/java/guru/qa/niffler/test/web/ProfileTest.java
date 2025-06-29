@@ -1,5 +1,5 @@
 package guru.qa.niffler.test.web;
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.BrowserExtension;
@@ -9,6 +9,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
+import guru.qa.niffler.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
 @ExtendWith(BrowserExtension.class)
 public class ProfileTest {
     private static final Config CFG = Config.getInstance();
+    private final SelenideDriver driver = new SelenideDriver(SelenideUtils.chromeConfig);
     @User(
             categories = @Category(
                     archived = false
@@ -26,7 +28,7 @@ public class ProfileTest {
     @Test
     void CheckingDisplayArchiveCategory(UserJson user) {
         final CategoryJson category = user.testData().categories().getFirst();
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user.username(), user.testData().password())
                 .openMenuProfile();
         new ProfilePage()
@@ -42,7 +44,7 @@ public class ProfileTest {
     )
     @Test
     void activeCategoryShouldBePresentedInListAfterRestored(CategoryJson[] category) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin("test-user1", "test1")
                 .openMenuProfile();
         new ProfilePage()
@@ -54,7 +56,7 @@ public class ProfileTest {
     @User
     @ScreenShotTest(value = "img/avatar-expected.png", rewriteExpected = true)
     void checkAvatarTest(UserJson user, BufferedImage expected) throws IOException {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user.username(), user.testData().password())
                 .openMenuProfile();
         new ProfilePage()
