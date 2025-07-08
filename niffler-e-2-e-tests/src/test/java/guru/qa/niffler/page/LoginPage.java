@@ -22,6 +22,13 @@ public class LoginPage {
     this.addNewUserButton = driver.$(".form__register");
     this.errorMessageBlock = driver.$(".form__error");
   }
+  public LoginPage(){
+    this.usernameInput = $("input[name='username']");
+    this.passwordInput = $("input[name='password']");
+    this.submitBtn = $("button[type='submit']");
+    this.addNewUserButton = $(".form__register");
+    this.errorMessageBlock = $(".form__error");
+  }
   public MainPage doLogin(String username, String password) {
     usernameInput.setValue(username);
     passwordInput.setValue(password);

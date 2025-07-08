@@ -6,7 +6,7 @@ import guru.qa.niffler.config.Config;
 
 import guru.qa.niffler.jupiter.*;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.utils.RandomDataUtils;
+import guru.qa.niffler.utils.RandomData;
 import guru.qa.niffler.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -37,7 +37,7 @@ public class LoginTest {
     public void checkEnteredInvalidPassword(@ConvertWith(BrowserConverter.class) SelenideDriver driver){
         browserExtension.drivers().add(driver);
         String login  = "test-user1";
-        String password = RandomDataUtils.randomUserPassword();
+        String password = RandomData.randomUserPassword();
 
         driver.open(CFG.frontUrl());
         new LoginPage(driver)

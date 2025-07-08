@@ -14,5 +14,7 @@ public interface UserDataRepository {
     void delete(UserEntity user);
     void addFriend(UserEntity requester, UserEntity addressee);
 
-    void sendInvitation(UserEntity requester, UserEntity addressee);
+    void addIncomeInvitation(UserEntity requester, UserEntity addressee);
+
+    void addOutcomeInvitation(UserEntity requester, UserEntity addressee);
 }

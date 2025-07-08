@@ -9,7 +9,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import javax.annotation.Nullable;
 
-import static guru.qa.niffler.utils.RandomDataUtils.randomUserName;
+import static guru.qa.niffler.utils.RandomData.randomUserName;
 
 
 public class UserExtension implements BeforeEachCallback, ParameterResolver {

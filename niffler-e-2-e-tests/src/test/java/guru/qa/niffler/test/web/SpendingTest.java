@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
+import com.ethlo.time.DateTime;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
@@ -13,7 +14,9 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.page.SpendTable;
 import guru.qa.niffler.page.StatComponent;
+import guru.qa.niffler.utils.RandomData;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import guru.qa.niffler.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -30,6 +34,7 @@ public class SpendingTest {
   private static final Config CFG = Config.getInstance();
     private final SelenideDriver driver = new SelenideDriver(SelenideUtils.chromeConfig);
     private StatComponent statComponent;
+    private final SpendTable spendTable = new SpendTable();
 
     @User(
           spendings = @Spend(
@@ -43,8 +48,9 @@ public class SpendingTest {
   void spendingDescriptionShouldBeUpdatedByTableAction(UserJson user) {
     final String newDescription = "Подарок";
         driver.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin(user.username(), user.testData().password())
-        .editSpending(user.testData().spendings().getFirst().description())
+        .doLogin(user.username(), user.testData().password());
+        spendTable
+                .editSpending(user.testData().spendings().getFirst().description())
         .editDescription(newDescription);
 
     new MainPage().checkThatTableContains(newDescription);
@@ -122,7 +128,8 @@ public class SpendingTest {
             "Видеосвет 3000 ₽"
     );
       driver.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
+            .doLogin(user.username(), user.testData().password());
+      spendTable
             .editSpending(user.testData().spendings().getFirst().description())
             .editAmount(newAmount)
             .shouldHaveStatSpend(statSpendList)
@@ -188,5 +195,22 @@ public class SpendingTest {
         driver.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user.username(), user.testData().password())
                 .checkSpendsTable(user.testData().spendings().toArray(SpendJson[]::new));
+    }
+    @Test
+    @User
+    void addNewSpending(UserJson user) {
+        String description = RandomData.randomSentence(1);
+        String categotyName = RandomData.randomCategoryName();
+        String amount = "1000";
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user.username(), user.testData().password())
+                .openAddSpendingPage()
+                .enterAmount(amount)
+                .enterCategory(categotyName)
+                .enterDescription(description)
+                .saveSpending()
+                .getSpendTable()
+                .checkTableContainsByDescription(description)
+                .checkTableSize(1);
     }
 }

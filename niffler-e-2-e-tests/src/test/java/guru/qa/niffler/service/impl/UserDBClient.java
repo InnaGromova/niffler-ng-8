@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.impl;
 
 
-import static guru.qa.niffler.utils.RandomDataUtils.randomUserName;
+import static guru.qa.niffler.utils.RandomData.randomUserName;
 
 import guru.qa.niffler.data.entity.Authority;
 import guru.qa.niffler.data.repository.AuthUserRepository;
@@ -79,7 +79,7 @@ public class UserDBClient implements UsersClient {
                     AuthUserEntity authUser = authUserEntity(username, "test-user5");
                     authUserRepository.create(authUser);
                             UserEntity addressee = userDataRepository.createUser(userEntity(username));
-                            userDataRepository.sendInvitation(targetEntity, addressee);
+                            userDataRepository.addIncomeInvitation(targetEntity, addressee);
                             requester.testData().friendshipRequests().add(UserJson.fromEntity(addressee, FriendshipStatus.INVITE_RECEIVED));
                             return null;
                         }
@@ -99,7 +99,7 @@ public class UserDBClient implements UsersClient {
                     AuthUserEntity authUser = authUserEntity(username, "test-user5");
                     authUserRepository.create(authUser);
                     UserEntity addressee = userDataRepository.createUser(userEntity(username));
-                    userDataRepository.sendInvitation(addressee, targetEntity);
+                    userDataRepository.addOutcomeInvitation(addressee, targetEntity);
                     targetUser.testData().friendshipAddressees().add(UserJson.fromEntity(addressee, FriendshipStatus.INVITE_SENT));
                             return null;
                         }

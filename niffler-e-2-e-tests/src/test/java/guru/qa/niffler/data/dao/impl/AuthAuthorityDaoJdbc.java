@@ -4,14 +4,18 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.AuthAuthorityEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
 import java.sql.*;
 import java.util.List;
 import java.util.UUID;
-
+@ParametersAreNonnullByDefault
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private static final Config CFG = Config.getInstance();
+    @Nonnull
     @Override
     public AuthAuthorityEntity create(AuthAuthorityEntity[] authorities) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -41,15 +45,13 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             throw new RuntimeException(e);
         }
         }
-
+    @Nonnull
     @Override
     public List<AuthAuthorityEntity> findByUserId(UUID userId) {
         return null;
     }
-
     @Override
     public void delete(AuthAuthorityEntity authority) {
-
     }
 
 }

@@ -4,6 +4,9 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserDataDao;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +14,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
+@ParametersAreNonnullByDefault
 public  class UserdataUserDaoJdbc implements UserDataDao {
     private static final Config CFG = Config.getInstance();
-
+    @Nonnull
     @Override
     public  UserEntity createUser(UserEntity user) {
             try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -52,7 +55,7 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
     public UserEntity update(UserEntity user) {
         return null;
     }
-
+    @Nonnull
     @Override
     public  Optional<UserEntity> findById(UUID id) {
             try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -83,6 +86,7 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public List<UserEntity> findAll() {
         List<UserEntity> ueList = new ArrayList<>();
@@ -108,8 +112,8 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
         }
         return ueList;
     }
-
-        @Override
+    @Nonnull
+    @Override
     public  Optional<UserEntity> findByUsername( String username) {
             try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                     "SELECT * FROM \"user\" WHERE username = ?"

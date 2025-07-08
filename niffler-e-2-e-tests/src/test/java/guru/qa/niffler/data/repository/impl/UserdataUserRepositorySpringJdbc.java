@@ -78,14 +78,15 @@ public class UserdataUserRepositorySpringJdbc implements UserDataRepository {
                         getFriendshipRecord(addressee.getId(), requester.getId(), FriendshipStatus.ACCEPTED))
         );
     }
+
     @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-        jdbcTemplate.update(
-                "INSERT INTO friendship (requester_id, addressee_id, status, created_date) " +
-                        "VALUES (?, ?, ?, ?)",
-                getFriendshipRecord(requester.getId(), addressee.getId(), FriendshipStatus.PENDING)
-        );
+    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+
     }
     public Object[] getFriendshipRecord(UUID requesterId, UUID addresseerId, FriendshipStatus status) {
         return new Object[]{requesterId, addresseerId, String.valueOf(status), new java.sql.Date(System.currentTimeMillis())};

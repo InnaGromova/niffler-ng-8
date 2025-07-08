@@ -10,8 +10,10 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.utils.SelenideUtils;
+import guru.qa.niffler.utils.RandomData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static com.codeborne.selenide.Selenide.open;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,5 +64,16 @@ public class ProfileTest {
         new ProfilePage()
                 .uploadPageForAvatar("img/avatar-upload.png")
                 .checkAvatar(expected);
+    }
+    @Test
+    @User
+    void editProfile(UserJson user) {
+        String name = RandomData.randomUserName();
+        open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user.username(), user.testData().password())
+                .openMenuProfile()
+                .setName(name)
+                .clickSaveChangesButton()
+                .checkName(name);
     }
 }

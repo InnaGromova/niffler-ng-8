@@ -129,6 +129,17 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+
+    }
+
     private void addFriendshipRecord(PreparedStatement ps, UUID requesterId, UUID addresseeId, FriendshipStatus status) throws SQLException {
         ps.setObject(1, requesterId);
         ps.setObject(2, addresseeId);
@@ -173,17 +184,6 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
                 ps.executeUpdate();
             }
             catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee) {
-        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO friendship (requester_id, addressee_id, status, created_date)" +
-                        "VALUES (?, ?, ?, ?)")) {
-            addFriendshipRecord(ps, requester.getId(), addressee.getId(), FriendshipStatus.PENDING);
-            ps.executeUpdate();
-        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

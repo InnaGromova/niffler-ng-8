@@ -1,23 +1,5 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.data.repository.AuthUserRepository;
-import guru.qa.niffler.data.repository.SpendRepository;
-import guru.qa.niffler.data.repository.UserDataRepository;
-import guru.qa.niffler.data.repository.impl.*;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.impl.SpendDBClient;
-import guru.qa.niffler.service.impl.UserDBClient;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import static guru.qa.niffler.utils.RandomDataUtils.*;
-import java.util.Date;
-import java.util.stream.Stream;
-
 //public class TestTransaction {
 //    @ParameterizedTest
 //    @MethodSource("spendRepositoryProvider")

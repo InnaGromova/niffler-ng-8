@@ -2,7 +2,7 @@ package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
 
-public class RandomDataUtils {
+public class RandomData {
     public static final Faker faker = new Faker();
 
     public static String randomUserName() {

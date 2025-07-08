@@ -4,6 +4,10 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
 import java.sql.*;
@@ -11,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
     private static final Config CFG = Config.getInstance();
-
+    @Nonnull
     @Override
     public CategoryEntity create(CategoryEntity category) {
             try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -42,7 +46,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
             try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -68,6 +72,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -91,7 +96,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public List<CategoryEntity> findAll() {
         List<CategoryEntity> categories = new ArrayList<>();
@@ -119,6 +124,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public CategoryEntity updateCategory(CategoryEntity category) {
             try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
