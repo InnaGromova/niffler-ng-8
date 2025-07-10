@@ -125,6 +125,10 @@ public class UserDBClient implements UsersClient {
         });
     }
 
+    @Override
+    public List<UserJson> allUsers(String username, String searchQuery) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     private AuthUserEntity authUserEntity(String username, String password) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(username);

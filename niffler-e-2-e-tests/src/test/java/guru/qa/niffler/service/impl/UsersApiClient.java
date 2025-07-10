@@ -8,8 +8,11 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.*;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jetbrains.annotations.NotNull;
+import retrofit2.Response;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -43,9 +46,9 @@ public class UsersApiClient extends RestClient implements UsersClient {
                 password,
                 password,
                 ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
-                );
+        );
         StopWatch sw = StopWatch.createStarted();
-        while (sw.getTime(TimeUnit.SECONDS) < 3){
+        while (sw.getTime(TimeUnit.SECONDS) < 3) {
             UserJson userJson = userApi.currentUser(username);
             if (userJson != null) {
                 return userJson.withPassword(password);
@@ -73,5 +76,15 @@ public class UsersApiClient extends RestClient implements UsersClient {
     @Override
     public Optional<UserJson> findUserByUsername(String username) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    @Override
+    public List<UserJson> allUsers(String username, String searchQuery) {
+        final Response<List<UserJson>> response;
+        try {
+            response = userApi.all(username, searchQuery).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return response.body() != null ? response.body() : Collections.emptyList();
     }
 }
