@@ -1,65 +1,72 @@
 package guru.qa.niffler.service.impl;
 
+
+import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.api.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.UsersApi;
-import guru.qa.niffler.service.UsersClient;
-import io.qameta.allure.okhttp3.AllureOkHttp3;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import org.junit.jupiter.api.Assertions;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.Response;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import guru.qa.niffler.service.*;
+import org.apache.commons.lang3.time.StopWatch;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-public class UsersApiClient implements UsersClient {
+@ParametersAreNonnullByDefault
+public class UsersApiClient extends RestClient implements UsersClient {
     private static final Config CFG = Config.getInstance();
-    private final OkHttpClient client = new OkHttpClient.Builder()
-            .addNetworkInterceptor(
-                    new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .addNetworkInterceptor(
-                    new AllureOkHttp3()
-                            .setRequestTemplate("request.ftl")
-                            .setResponseTemplate("response.ftl")
-            ).build();
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(CFG.userdataUrl())
-            .client(client)
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build();
-    private final UsersApi usersApi = retrofit.create(UsersApi.class);
-    private <T> T executeCall(Call<T> call){
-        final Response<T> response;
-        try {
-            response = call.execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        Assertions.assertTrue(response.isSuccessful());
-        return response.body();
+    private final AuthApi authApi = new RestClient.EmtyRestClient(CFG.authUrl()).create(AuthApi.class);
+    private final UserApi userApi = new RestClient.EmtyRestClient(CFG.userdataUrl()).create(UserApi.class);
+
+    public UsersApiClient() {
+        super(CFG.userdataUrl());
     }
+
+    //    private <T> T executeCall(Call<T> call){
+//        final Response<T> response;
+//        try {
+//            response = call.execute();
+//        } catch (IOException e) {
+//            throw new AssertionError(e);
+//        }
+//        Assertions.assertTrue(response.isSuccessful());
+//        return response.body();
+//    }
+    @NotNull
     @Override
     public UserJson createUser(String username, String password) {
+        authApi.requestRegisterForm();
+        authApi.registerUser(
+                username,
+                password,
+                password,
+                ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+                );
+        StopWatch sw = StopWatch.createStarted();
+        while (sw.getTime(TimeUnit.SECONDS) < 3){
+            UserJson userJson = userApi.currentUser(username);
+            if (userJson != null) {
+                return userJson.withPassword(password);
+            } else Selenide.sleep(100);
+        }
+        throw new IllegalStateException("Could not register user");
+    }
+
+    @Override
+    public List<UserJson> createFriends(UserJson user, int count) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
+
+    }
+
+    @Override
+    public List<UserJson> createIncomeInvitations(UserJson requester, int count) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void createFriends(UserJson user, int count) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-
-    }
-
-    @Override
-    public void createIncomeInvitations(UserJson requester, int count) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void createOutcomeInvitations(UserJson addressee, int count) throws Exception {
+    public List<UserJson> createOutcomeInvitations(UserJson addressee, int count) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

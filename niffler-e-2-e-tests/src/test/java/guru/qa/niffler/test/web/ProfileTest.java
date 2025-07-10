@@ -74,6 +74,7 @@ public class ProfileTest {
                 .openMenuProfile()
                 .setName(name)
                 .clickSaveChangesButton()
+                .checkAlertMessage("Profile successfully updated")
                 .checkName(name);
     }
 }

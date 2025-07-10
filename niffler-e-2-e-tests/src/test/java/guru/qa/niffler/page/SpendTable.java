@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.BaseComponent;
 import guru.qa.niffler.values.DataFilterValues;
 import io.qameta.allure.Step;
 
@@ -14,7 +15,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class SpendTable {
+public class SpendTable extends BasePage<SpendTable> {
     @ParametersAreNonnullByDefault
     private final ElementsCollection tableRows = $$("#spendings tbody tr");
     private final SelenideElement inputPeriod = $("//input[@name='period']");
@@ -23,6 +24,7 @@ public class SpendTable {
     private final SelenideElement searchField = $("input[placeholder='Search']");
     private final SelenideElement deleteButton = $("//button[@id='delete']");
     private final SelenideElement confirmWindowDeleteButton = $("//button[text()='Delete']");
+
     public ElementsCollection getTableRows() {
         return tableRows;
     }

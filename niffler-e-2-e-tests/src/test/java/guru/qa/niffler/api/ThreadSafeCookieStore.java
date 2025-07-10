@@ -1,9 +1,6 @@
-package guru.qa.niffler.api.core;
+package guru.qa.niffler.api;
 
-import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpCookie;
-import java.net.URI;
+import java.net.*;
 import java.util.List;
 
 public enum ThreadSafeCookieStore implements CookieStore {
@@ -12,7 +9,6 @@ public enum ThreadSafeCookieStore implements CookieStore {
     private final ThreadLocal<CookieStore> threadLocalCookieStore = ThreadLocal.withInitial(
             this::inMemoryCookieStore
     );
-
     private CookieStore inMemoryCookieStore() {
         return new CookieManager().getCookieStore();
     }

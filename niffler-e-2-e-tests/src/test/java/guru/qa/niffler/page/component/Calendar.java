@@ -1,7 +1,8 @@
-package guru.qa.niffler.page;
+package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.BaseComponent;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
@@ -17,14 +18,18 @@ import static com.codeborne.selenide.Selenide.$$;
 import static java.util.Calendar.*;
 
 @ParametersAreNonnullByDefault
-public class Calendar {
-    private SelenideElement self = $(".MuiDateCalendar-root");
+public class Calendar extends BaseComponent{
     private final SelenideElement chooseDateButton = $("button[aria-label*=\"Choose date\"]");
     private final SelenideElement currentMonthAndYear = self.$(".MuiPickersFadeTransitionGroup-root");
     private final ElementsCollection selectYear = self.$$(".MuiPickersYear-yearButton");
     private final SelenideElement previousMonthButton = self.$("[data-testid=\"ArrowLeftIcon\"]");
     private final SelenideElement nextMonthButton = self.$("[data-testid=\"ArrowRightIcon\"]");
     private final ElementsCollection daysInMonth = $$(".MuiPickersSlideTransition-root button");
+
+    public Calendar(Object currentPage, SelenideElement self) {
+        super(currentPage, $("div.MuiInputBase-root input[name=\"date\"]"));
+    }
+
     @Nonnull
     @Step("Select date in calender")
     public void selectDateInCalendar(Date date) {

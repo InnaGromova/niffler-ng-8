@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.utils.RandomData;
 import guru.qa.niffler.utils.SelenideUtils;

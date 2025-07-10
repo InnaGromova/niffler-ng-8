@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class AddSpendingPage {
+public class AddSpendingPage extends BasePage {
     private final SelenideElement descriptionInput = $("#description");
     private final SelenideElement categoryInput = $("#category");
     private final SelenideElement submitButton = $("#save");

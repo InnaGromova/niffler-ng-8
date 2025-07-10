@@ -1,7 +1,6 @@
 package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
-import com.ethlo.time.DateTime;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
@@ -24,7 +23,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -209,6 +207,7 @@ public class SpendingTest {
                 .enterCategory(categotyName)
                 .enterDescription(description)
                 .saveSpending()
+                .checkAlertMessage("New spending is successfully created")
                 .getSpendTable()
                 .checkTableContainsByDescription(description)
                 .checkTableSize(1);

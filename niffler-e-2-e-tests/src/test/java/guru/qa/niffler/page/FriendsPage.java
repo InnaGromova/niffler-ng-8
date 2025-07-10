@@ -9,13 +9,12 @@ import org.openqa.selenium.By;
 
 import javax.annotation.Nonnull;
 
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 
-public class FriendsPage {
+public class FriendsPage extends BasePage {
     private static final String asseptFriendshipButton = "button.MuiButton-containedPrimary";
     private static final String rejectFriendshipButton = "button.MuiButton-containedSecondary";
     private final SelenideElement messageThereAreNoFriends;
@@ -26,11 +25,6 @@ public class FriendsPage {
     private final ElementsCollection friendRequestRow;
     private final SelenideElement friendsTable;
 
-//    public FriendsPage(SelenideDriver driver){
-//        this.messageThereAreNoFriends = driver.$(byText("There are no users yet"));
-//        this.waitingMessage = driver.$(byText("Waiting..."));
-//        this.searchField = driver.$("input[placeholder='Search']");
-//    }
     public FriendsPage(){
         this.messageThereAreNoFriends = $(byText("There are no users yet"));
         this.waitingMessage = $(byText("Waiting..."));

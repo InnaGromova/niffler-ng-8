@@ -1,63 +1,44 @@
-package guru.qa.niffler.api.core;
+package guru.qa.niffler.service;
 
+import guru.qa.niffler.api.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
-import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.lang3.ArrayUtils;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
-import static com.github.jknack.handlebars.internal.lang3.ObjectUtils.isNotEmpty;
-import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
-
-
 public abstract class RestClient {
     protected static final Config CFG = Config.getInstance();
-
     private final OkHttpClient okHttpClient;
-    private final Retrofit retrofit;
-
+    protected final Retrofit retrofit;
     public RestClient(String baseUrl) {
         this(baseUrl, false, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.BODY);
     }
-
     public RestClient(String baseUrl, boolean followRedirect) {
         this(baseUrl, followRedirect, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.BODY);
     }
-
-    public RestClient(String baseUrl, boolean followRedirect, @Nullable Interceptor... interceptors) {
-        this(baseUrl, followRedirect, JacksonConverterFactory.create(), HEADERS, interceptors);
-    }
-
     public RestClient(String baseUrl, Converter.Factory factory) {
         this(baseUrl, false, factory, HttpLoggingInterceptor.Level.BODY);
     }
-
-    public RestClient(String baseUrl, boolean followRedirect, Converter.Factory factory, HttpLoggingInterceptor.Level level, @Nullable Interceptor... interceptors) {
+    public RestClient(String baseUrl, boolean followRedirect, Converter.Factory factory, HttpLoggingInterceptor.Level level, Interceptor... interceptors) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .followRedirects(followRedirect);
 
-        if (isNotEmpty(interceptors)) {
-            for (Interceptor interceptor : interceptors) {
+        if (ArrayUtils.isNotEmpty(interceptors)){
+            for (Interceptor interceptor : interceptors){
                 builder.addNetworkInterceptor(interceptor);
             }
         }
 
         builder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(level));
-        builder.addNetworkInterceptor(
-                new AllureOkHttp3()
-                        .setRequestTemplate("http-request.ftl")
-                        .setResponseTemplate("http-response.ftl")
-        );
         builder.cookieJar(
                 new JavaNetCookieJar(
                         new CookieManager(
@@ -73,13 +54,14 @@ public abstract class RestClient {
                 .addConverterFactory(factory)
                 .build();
     }
-
-    @Nonnull
+    public Retrofit retrofit() {
+         return this.retrofit;
+    }
     public <T> T create(final Class<T> service) {
         return this.retrofit.create(service);
     }
-
     public static final class EmtyRestClient extends RestClient {
+
         public EmtyRestClient(String baseUrl) {
             super(baseUrl);
         }

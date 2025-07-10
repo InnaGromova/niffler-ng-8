@@ -1,10 +1,6 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideDriver;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import guru.qa.niffler.condition.SpendConditions;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.utils.ScreenDiffResult;
@@ -23,9 +19,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class MainPage {
-
-  private final StatComponent statComponent = new StatComponent();
+public class MainPage extends BasePage<MainPage> {
   private final ElementsCollection tableRows;
   private final SelenideElement spendingTable;
   private final SelenideElement headerBlock;
@@ -36,20 +30,8 @@ public class MainPage {
   private final ElementsCollection statCategories;
   private final ElementsCollection menuItems;
   private SpendTable spendTable = new SpendTable();
+  private StatComponent statComponent = new StatComponent();
 
-//  public MainPage(SelenideDriver driver){
-//    this.tableRows = driver.$$("#spendings tbody tr");
-//    this.spendingTable = driver.$("#spendings");
-//    this.headerBlock = driver.$("#root header");
-//    this.menu = driver.$("ul[role='menu']");
-//    this.avatar = driver.$("svg[data-testid='PersonIcon']");
-//    this.profile = driver.$("li[role='menuitem'] a[href='/profile']");
-//    this.friends = driver.$("li[role='menuitem'] a[href='/people/friends']");
-//    this.allPeople = driver.$("li[role='menuitem'] a[href='/people/all']");
-//    this.searchField = driver.$("input[placeholder='Search']");
-//    this.diagram = driver.$("canvas[role='img']");
-//    this.statCategories = driver.$$("#legend-container li");
-//  }
   public MainPage(){
     this.tableRows = $$("#spendings tbody tr");
     this.spendingTable = $("#spendings");
@@ -61,12 +43,11 @@ public class MainPage {
     this.addNewSpendingButton = headerBlock.$("a[href='/spending']");
     this.menuItems = headerBlock.parent().parent().$$("[role='menuitem']");
   }
-
-  public StatComponent getStatComponent() {
-    return statComponent;
-  }
   public SpendTable getSpendTable() {
     return spendTable;
+  }
+  public StatComponent getStatComponent() {
+    return statComponent;
   }
   @Nonnull
   @Step("Check contents of table with spends")
@@ -104,8 +85,7 @@ public class MainPage {
   @Nonnull
   @Step("Go to All People")
   public AddSpendingPage openAddSpendingPage() {
-    Selenide.sleep(10000);
-    addNewSpendingButton.click();
+    addNewSpendingButton.shouldBe(visible).click();
     return new AddSpendingPage();
   }
   @Nonnull

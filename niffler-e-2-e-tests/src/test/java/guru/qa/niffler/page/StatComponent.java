@@ -14,13 +14,13 @@ import java.util.Objects;
 import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.condition.StatConditions.color;
 import static guru.qa.niffler.condition.StatConditions.statBubbles;
-import static java.util.Objects.requireNonNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class StatComponent{
-    public final SelenideElement self = $("#stat");
+
+public class StatComponent {
+    private final SelenideElement self = $("#stat");
     private final ElementsCollection bubbles = self.$("#legend-container").$$("li");
     private final SelenideElement chart = $("canvas[role='img']");
+
     @Nonnull
     public BufferedImage chartScreenShot() throws IOException {
        return ImageIO.read(Objects.requireNonNull(chart.screenshot()));

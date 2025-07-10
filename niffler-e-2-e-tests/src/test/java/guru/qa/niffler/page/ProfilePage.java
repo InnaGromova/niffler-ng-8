@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class ProfilePage {
+public class ProfilePage extends BasePage <ProfilePage>{
     private final ElementsCollection activeCategories;
     private final ElementsCollection archivedCategories;
     private final SelenideElement archiveButton;

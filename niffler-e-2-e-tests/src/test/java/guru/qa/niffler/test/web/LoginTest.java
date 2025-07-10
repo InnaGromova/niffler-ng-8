@@ -34,7 +34,7 @@ public class LoginTest {
     }
     @ParameterizedTest
     @EnumSource(value = Browser.class, names = "FIREFOX")
-    public void checkEnteredInvalidPassword(@ConvertWith(BrowserConverter.class) SelenideDriver driver){
+    public void checkEnteredInvalidPassword(){
         browserExtension.drivers().add(driver);
         String login  = "test-user1";
         String password = RandomData.randomUserPassword();

@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.UserEntity;
 import jaxb.userdata.FriendshipStatus;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public record UserJson(
@@ -71,6 +73,20 @@ public record UserJson(
                 photo,
                 photoSmall,
                 testData);
+    }
+    public UserJson withUsers(List<UserJson> friends,
+                              List<UserJson> outcomeInvitations,
+                              List<UserJson> incomeInvitations) {
+        return withTestData(
+                new TestData(
+                        testData.password(),
+                        testData.categories(),
+                        testData.spendings(),
+                        friends,
+                        outcomeInvitations,
+                        incomeInvitations
+                )
+        );
     }
 
 }

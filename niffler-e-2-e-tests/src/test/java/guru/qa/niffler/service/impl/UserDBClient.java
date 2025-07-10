@@ -21,6 +21,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserDBClient implements UsersClient {
@@ -33,22 +35,20 @@ public class UserDBClient implements UsersClient {
     private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
-    public UserJson createUser(String username, String password) {
-        try {
-            return xaTransactionTemplate.execute(() -> {
-                        AuthUserEntity authUser = authUserEntity(String.valueOf(username), password);
-                        authUserRepository.create(authUser);
-                        return UserJson.fromEntity(
-                                userDataRepository.createUser(userEntity(username)),
-                                null);
-        });
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public UserJson createUser(String username, String password) throws Exception {
+        return Objects.requireNonNull(xaTransactionTemplate.execute(() -> {
+                    AuthUserEntity authUser = authUserEntity(username, password);
+                    authUserRepository.create(authUser);
+                    return UserJson.fromEntity(
+                            userDataRepository.createUser(userEntity(username)),
+                            null
+                    );
+                }
+        ));
     }
 
     @Override
-    public void createFriends(UserJson user, int count) throws Exception {
+    public List<UserJson> createFriends(UserJson user, int count) throws Exception {
         if (count > 0) {
             UserEntity targetEntity = userDataRepository.findById(user.id())
                     .orElseThrow(() -> new IllegalArgumentException("Target user not found"));
@@ -66,9 +66,10 @@ public class UserDBClient implements UsersClient {
                 });
             }
         }
+        return null;
     }
     @Override
-    public void createIncomeInvitations(UserJson requester, int count) throws Exception {
+    public List<UserJson> createIncomeInvitations(UserJson requester, int count) throws Exception {
         if (count > 0) {
             UserEntity targetEntity = userDataRepository.findById(
                     requester.id()
@@ -86,9 +87,10 @@ public class UserDBClient implements UsersClient {
                 );
             }
         }
+        return null;
     }
     @Override
-    public void createOutcomeInvitations(UserJson targetUser, int count) throws Exception {
+    public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) throws Exception {
         if (count > 0) {
             UserEntity targetEntity = userDataRepository.findById(
                     targetUser.id()
@@ -106,6 +108,7 @@ public class UserDBClient implements UsersClient {
                 );
             }
         }
+        return null;
     }
     @Override
     public Optional<UserJson> findUserByUsername(String username) throws Exception {
