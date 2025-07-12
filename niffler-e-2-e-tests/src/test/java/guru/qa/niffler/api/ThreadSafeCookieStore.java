@@ -27,7 +27,6 @@ public enum ThreadSafeCookieStore implements CookieStore {
     public List<HttpCookie> getCookies() {
         return getStore().getCookies();
     }
-
     @Override
     public List<URI> getURIs() {
         return getStore().getURIs();

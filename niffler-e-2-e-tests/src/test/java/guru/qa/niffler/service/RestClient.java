@@ -8,12 +8,17 @@ import okhttp3.OkHttpClient;
 
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
+import retrofit2.Call;
 import retrofit2.Converter;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class RestClient {
     protected static final Config CFG = Config.getInstance();
@@ -77,5 +82,27 @@ public abstract class RestClient {
         public EmtyRestClient(String baseUrl, boolean followRedirect, Converter.Factory factory, HttpLoggingInterceptor.Level level, Interceptor... interceptors) {
             super(baseUrl, followRedirect, factory, level, interceptors);
         }
+    }
+    public <T> T execute(Call<T> executeMethod, int expectedCode) {
+        final Response<T> response;
+        try {
+            response = executeMethod.execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
+        assertEquals(expectedCode, response.code());
+        return response.body();
+    }
+
+    public <T> T execute(Call<T> executeMethod) {
+        final Response<T> response;
+        try {
+            response = executeMethod.execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
+        return response.body();
     }
 }
