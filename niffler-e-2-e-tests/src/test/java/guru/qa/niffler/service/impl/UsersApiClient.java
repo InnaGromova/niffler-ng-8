@@ -6,16 +6,21 @@ import guru.qa.niffler.api.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.*;
+import jaxb.userdata.FriendshipStatus;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 
 @ParametersAreNonnullByDefault
 public class UsersApiClient extends RestClient implements UsersClient {
@@ -27,16 +32,6 @@ public class UsersApiClient extends RestClient implements UsersClient {
         super(CFG.userdataUrl());
     }
 
-    //    private <T> T executeCall(Call<T> call){
-//        final Response<T> response;
-//        try {
-//            response = call.execute();
-//        } catch (IOException e) {
-//            throw new AssertionError(e);
-//        }
-//        Assertions.assertTrue(response.isSuccessful());
-//        return response.body();
-//    }
     @NotNull
     @Override
     public UserJson createUser(String username, String password) {
@@ -86,5 +81,33 @@ public class UsersApiClient extends RestClient implements UsersClient {
             throw new RuntimeException(e);
         }
         return response.body() != null ? response.body() : Collections.emptyList();
+    }
+    @Override
+    public List<UserJson> getFriends(String username) {
+        return Objects.requireNonNull(execute(
+                        userApi.getFriends(username)))
+                .stream()
+                .filter(userJson ->
+                        FriendshipStatus.FRIEND.equals(userJson.friendshipStatus()))
+                .toList();
+    }
+    @Override
+    public List<UserJson> getIncomeInvitations(String username) {
+        return Objects.requireNonNull(execute(
+                        userApi.getFriends(username)))
+                .stream()
+                .filter(userJson ->
+                        FriendshipStatus.INVITE_RECEIVED.equals(userJson.friendshipStatus()))
+                .toList();
+    }
+
+    @Override
+    public List<UserJson> getOutcomeInvitations(String username, String searchQuery) {
+        return Objects.requireNonNull(execute(
+                        userApi.all(username, searchQuery)))
+                .stream()
+                .filter(userJson ->
+                        FriendshipStatus.INVITE_SENT.equals(userJson.friendshipStatus()))
+                .toList();
     }
 }

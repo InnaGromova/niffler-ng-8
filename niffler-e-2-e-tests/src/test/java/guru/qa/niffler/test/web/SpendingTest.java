@@ -4,6 +4,7 @@ import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -11,10 +12,7 @@ import guru.qa.niffler.model.Bubble;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.page.SpendTable;
-import guru.qa.niffler.page.StatComponent;
+import guru.qa.niffler.page.*;
 import guru.qa.niffler.utils.RandomData;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import guru.qa.niffler.utils.SelenideUtils;
@@ -33,7 +31,6 @@ public class SpendingTest {
     private final SelenideDriver driver = new SelenideDriver(SelenideUtils.chromeConfig);
     private StatComponent statComponent;
     private final SpendTable spendTable = new SpendTable();
-
     @User(
           spendings = @Spend(
                   category = "Цветы",
@@ -42,15 +39,19 @@ public class SpendingTest {
                   currency = CurrencyValues.RUB
           )
   )
-  @Test
-  void spendingDescriptionShouldBeUpdatedByTableAction(UserJson user) {
+    @Test
+    @ApiLogin
+    void spendingDescriptionShouldBeUpdatedByTableAction(UserJson user) {
     final String newDescription = "Подарок";
-        driver.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin(user.username(), user.testData().password());
-        spendTable
-                .editSpending(user.testData().spendings().getFirst().description())
+        Selenide.open(MainPage.URL, MainPage.class);
+        spendTable.editSpending(
+                user
+                        .testData()
+                        .spendings()
+                        .getFirst().
+                        description()
+                )
         .editDescription(newDescription);
-
     new MainPage().checkThatTableContains(newDescription);
   }
   @User(
@@ -61,12 +62,10 @@ public class SpendingTest {
                   currency = CurrencyValues.RUB
           )
   )
+  @ApiLogin
   @ScreenShotTest(value = "img/expected-stat.png", rewriteExpected = true)
   void checkStatComponent(UserJson user, BufferedImage expected) throws IOException {
-    StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
-              .doLogin(user.username(), user.testData().password())
-              .getStatComponent();
-      Selenide.sleep(10000);
+    StatComponent statComponent = Selenide.open(MainPage.URL, MainPage.class).getStatComponent();
     assertFalse(new ScreenDiffResult(
             expected,
             statComponent.chartScreenShot()
@@ -92,13 +91,10 @@ public class SpendingTest {
           }
 
   )
+  @ApiLogin
   @ScreenShotTest(value = "img/2spend-expected.png", rewriteExpected = true)
-  void checkStatComponent2SpendTest(UserJson user, BufferedImage expected) throws IOException {
-      StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
-            .checkDiagramm(expected)
-                    .getStatComponent();
-      Selenide.sleep(10000);
+  void checkStatComponent2SpendTest(UserJson user, BufferedImage expected)  {
+      StatComponent statComponent = Selenide.open(MainPage.URL, MainPage.class).getStatComponent();
     statComponent.checkBubblesInAnyOrder(new Bubble(Color.green, "Освещение2 2000 ₽"),new Bubble(Color.yellow, "Видеосвет2 3000 ₽") );
   }
   @User(
@@ -118,6 +114,7 @@ public class SpendingTest {
           }
 
   )
+  @ApiLogin
   @ScreenShotTest(value = "img/editSpend-expected.png", rewriteExpected = true)
   void checkStatComponentEditSpendTest(UserJson user, BufferedImage expected) throws IOException {
     final String newAmount = "4000";
@@ -125,8 +122,7 @@ public class SpendingTest {
             "Освещение 4000 ₽",
             "Видеосвет 3000 ₽"
     );
-      driver.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password());
+      Selenide.open(MainPage.URL, MainPage.class);
       spendTable
             .editSpending(user.testData().spendings().getFirst().description())
             .editAmount(newAmount)
@@ -156,12 +152,10 @@ public class SpendingTest {
           }
 
   )
+  @ApiLogin
   @Test
   void statBubblesContains(UserJson user){
-    StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
-                    .getStatComponent();
-      Selenide.sleep(10000);
+    StatComponent statComponent = Selenide.open(MainPage.URL, MainPage.class).getStatComponent();
     statComponent.checkBubblesContains(new Bubble(Color.green, "Йога 2000 ₽"),
             new Bubble(Color.orange, "Плаванье 1000 ₽"));
   }
@@ -188,21 +182,19 @@ public class SpendingTest {
             }
 
     )
+    @ApiLogin
     @Test
     void spendTableTest(UserJson user){
-        driver.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.testData().password())
+        Selenide.open(MainPage.URL,MainPage.class)
                 .checkSpendsTable(user.testData().spendings().toArray(SpendJson[]::new));
     }
     @Test
-    @User
-    void addNewSpending(UserJson user) {
+    @ApiLogin(username = "test-user4", password = "test4")
+    void addNewSpending() {
         String description = RandomData.randomSentence(1);
         String categotyName = RandomData.randomCategoryName();
         String amount = "1000";
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.testData().password())
-                .openAddSpendingPage()
+        Selenide.open(AddSpendingPage.URL, AddSpendingPage.class)
                 .enterAmount(amount)
                 .enterCategory(categotyName)
                 .enterDescription(description)

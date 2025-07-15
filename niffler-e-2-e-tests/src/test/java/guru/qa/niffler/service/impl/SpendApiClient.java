@@ -3,7 +3,9 @@ package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.SpendsApi;
 import guru.qa.niffler.service.SpendsClient;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
@@ -15,11 +17,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
-public class SpendApiClient implements SpendsClient {
+public class SpendApiClient extends RestClient implements SpendsClient {
     private static final Config CFG = Config.getInstance();
     private final OkHttpClient client = new OkHttpClient.Builder()
             .addNetworkInterceptor(
@@ -35,6 +37,9 @@ public class SpendApiClient implements SpendsClient {
             .addConverterFactory(JacksonConverterFactory.create())
             .build();
     private final SpendsApi spendApi = retrofit.create(SpendsApi.class);
+    public SpendApiClient() {
+        super(CFG.spendUrl());
+    }
 
     private <T> T executeCall(Call<T> call){
         final Response<T> response;
@@ -77,5 +82,25 @@ public class SpendApiClient implements SpendsClient {
     @Override
     public SpendJson findSpendById(UUID id) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<SpendJson> getAllSpends(String username,
+                                        @Nullable CurrencyValues filterCurrency,
+                                        @Nullable Date from,
+                                        @Nullable Date to) {
+        return Objects.requireNonNull(execute(spendApi.getAllSpends(username, filterCurrency, from, to)));
+    }
+    @Override
+    public List<CategoryJson> getAllCategories(String username, boolean excludeArchived) {
+        try {
+            Response<List<CategoryJson>> response = spendApi.getCategories(username, excludeArchived).execute();
+            if (!response.isSuccessful()) {
+                throw new RuntimeException("Request failed with status code: " + response.code());
+            }
+            return response.body();
+        } catch (IOException e) {
+            throw new RuntimeException("Error during HTTP request", e);
+        }
     }
 }

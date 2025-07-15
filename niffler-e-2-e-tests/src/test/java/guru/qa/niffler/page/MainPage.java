@@ -20,6 +20,8 @@ import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage extends BasePage<MainPage> {
+  public static final String URL = CFG.frontUrl() + "main";
+
   private final ElementsCollection tableRows;
   private final SelenideElement spendingTable;
   private final SelenideElement headerBlock;
@@ -47,6 +49,7 @@ public class MainPage extends BasePage<MainPage> {
     return spendTable;
   }
   public StatComponent getStatComponent() {
+    Selenide.sleep(10000);
     return statComponent;
   }
   @Nonnull

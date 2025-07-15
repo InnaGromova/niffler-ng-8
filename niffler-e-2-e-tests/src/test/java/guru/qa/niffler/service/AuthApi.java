@@ -15,17 +15,17 @@ public interface  AuthApi {
 
     @POST("login")
     @FormUrlEncoded
-    Call<Void> login(@Field("_csrf") String csrf,
-                     @Field("username") String username,
-                     @Field("password") String password);
+    Call<Void> login( @Field("username") String username,
+                      @Field("password") String password,
+                      @Field("_csrf") String csrfToken);
 
     @POST("oauth2/token")
     @FormUrlEncoded
     Call<JsonNode> token(@Field("code") String code,
                          @Field(value = "redirect_uri", encoded = true) String redirectUri,
+                         @Field("client_id") String clientId,
                          @Field("code_verifier") String codeVerifier,
-                         @Field("grant_type") String grantType,
-                         @Field("client_id") String clientId);
+                         @Field("grant_type") String grantType);
     @GET("register")
     Call<Void> requestRegisterForm();
 

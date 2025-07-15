@@ -21,4 +21,10 @@ public interface UsersClient {
     List<UserJson> createOutcomeInvitations(UserJson addressee, int count) throws Exception;
     Optional<UserJson> findUserByUsername(String username) throws Exception;
     List<UserJson> allUsers(String username, String searchQuery);
+
+    List<UserJson> getFriends(String username);
+
+    List<UserJson> getIncomeInvitations(String username);
+
+    List<UserJson> getOutcomeInvitations(String username, String searchQuery);
 }

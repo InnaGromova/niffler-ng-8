@@ -14,7 +14,8 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 
-public class FriendsPage extends BasePage {
+public class FriendsPage extends BasePage<FriendsPage> {
+    public static final String URL = CFG.frontUrl() + "people/friends";
     private static final String asseptFriendshipButton = "button.MuiButton-containedPrimary";
     private static final String rejectFriendshipButton = "button.MuiButton-containedSecondary";
     private final SelenideElement messageThereAreNoFriends;

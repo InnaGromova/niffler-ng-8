@@ -1,17 +1,19 @@
 package guru.qa.niffler.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.qa.niffler.api.CodeInterceptor;
+import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.AuthApi;
 import guru.qa.niffler.utils.OAuthUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.api.ThreadSafeCookieStore;
 import lombok.SneakyThrows;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -20,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class AuthApiClient extends RestClient {
     private final AuthApi authApi;
     public AuthApiClient() {
-        super(CFG.authUrl());
+        super(CFG.authUrl(), true, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.HEADERS, new CodeInterceptor());
         this.authApi = create(AuthApi.class);
     }
     @SneakyThrows
@@ -31,7 +33,7 @@ public class AuthApiClient extends RestClient {
         final String redirectUri = CFG.frontUrl() + "authorized";
         final String clientId = "client";
 
-        Response<Void> authResponse = authApi.authorize(
+        authApi.authorize(
                 "code",
                 clientId,
                 "openid",
@@ -39,30 +41,34 @@ public class AuthApiClient extends RestClient {
                 codeChallenge,
                 "S256"
         ).execute();
-        assertEquals(302, authResponse.code());
+
+        System.out.println("Cookies before login: " + ThreadSafeCookieStore.INSTANCE.getCookies());
 
         Response<Void> loginResponse = authApi.login(
-                ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN"),
                 username,
-                password
-        ).execute();
-        assertEquals(302, loginResponse.code());
+                password,
+                ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+                ).execute();
 
-        String locationUrl = loginResponse.headers().get("Location");
+        System.out.println("Login response code: " + loginResponse.code());
+        System.out.println("Login response headers: " + loginResponse.headers());
+        System.out.println("Login response body: " + loginResponse.body());
 
-        String code = StringUtils.substringAfter(locationUrl, "code=");
 
         Response<JsonNode> tokenResponse = authApi.token(
-                code,
+                ApiLoginExtension.getCode(),
                 redirectUri,
+                clientId,
                 codeVerifier,
-                "authorization_code",
-                clientId
-
+                "authorization_code"
         ).execute();
-        assertEquals(200, tokenResponse.code());
 
-        return tokenResponse.body().get("id_token").asText();
+        if (tokenResponse.code() != 200) {
+            throw new RuntimeException("Token request failed with status code: " + tokenResponse.code());
+        }
+
+        return tokenResponse.body().get("id_token")
+                .asText();
     }
 
     public String preRequest(){

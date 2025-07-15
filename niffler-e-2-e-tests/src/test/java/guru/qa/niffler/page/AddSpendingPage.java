@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import static com.codeborne.selenide.Selenide.$;
 
 public class AddSpendingPage extends BasePage {
+    public static final String URL = CFG.frontUrl() + "spending";
     private final SelenideElement descriptionInput = $("#description");
     private final SelenideElement categoryInput = $("#category");
     private final SelenideElement submitButton = $("#save");

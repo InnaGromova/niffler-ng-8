@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient;
 
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.lang.Nullable;
 import retrofit2.Call;
 import retrofit2.Converter;
 import retrofit2.Response;
@@ -32,6 +33,9 @@ public abstract class RestClient {
     }
     public RestClient(String baseUrl, Converter.Factory factory) {
         this(baseUrl, false, factory, HttpLoggingInterceptor.Level.BODY);
+    }
+    public RestClient(String baseUrl, boolean followRedirect, @Nullable Interceptor... interceptors) {
+        this(baseUrl, followRedirect, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.HEADERS, interceptors);
     }
     public RestClient(String baseUrl, boolean followRedirect, Converter.Factory factory, HttpLoggingInterceptor.Level level, Interceptor... interceptors) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()

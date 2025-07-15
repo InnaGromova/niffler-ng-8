@@ -86,10 +86,16 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return createUser();
+        return getUserJson();
     }
+
+    public static Object getUserJson() {
+        final ExtensionContext context = TestMethodContextExtension.context();
+        return context.getStore(NAMESPACE).get(context.getUniqueId(), UserJson.class);
+    }
+
     public static void setUser(UserJson testUser) {
-        final ExtensionContext context = context();
+        final ExtensionContext context = TestMethodContextExtension.context();
         context.getStore(NAMESPACE).put(
                 context.getUniqueId(),
                 testUser

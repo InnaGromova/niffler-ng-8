@@ -20,7 +20,6 @@ public class SpendTable extends BasePage<SpendTable> {
     private final ElementsCollection tableRows = $$("#spendings tbody tr");
     private final SelenideElement inputPeriod = $("//input[@name='period']");
     private final String periodOptions = "li[data-value='%s']";
-    private final ElementsCollection spendTableRows = $$("#spendings tbody tr");
     private final SelenideElement searchField = $("input[placeholder='Search']");
     private final SelenideElement deleteButton = $("//button[@id='delete']");
     private final SelenideElement confirmWindowDeleteButton = $("//button[text()='Delete']");
@@ -76,7 +75,7 @@ public class SpendTable extends BasePage<SpendTable> {
     @Nonnull
     @Step("Сheck  table size")
     public SpendTable checkTableSize(int expectedSize) {
-        spendTableRows.shouldHave(size(expectedSize));
+        tableRows.shouldHave(size(expectedSize));
         return this;
     }
 

@@ -1,6 +1,7 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.service.*;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.SpendDao;
@@ -14,7 +15,10 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,5 +99,15 @@ public class SpendDBClient implements SpendsClient {
                         .map(SpendJson::fromEntity)
                         .orElse(null)
         );
+    }
+
+    @Override
+    public List<SpendJson> getAllSpends(String username, @Nullable CurrencyValues filterCurrency, @Nullable Date from, @Nullable Date to) {
+        return null;
+    }
+
+    @Override
+    public List<CategoryJson> getAllCategories(String username, boolean excludeArchived) {
+        return null;
     }
 }

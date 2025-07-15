@@ -18,6 +18,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ProfilePage extends BasePage <ProfilePage>{
+    public static final String URL = CFG.frontUrl() + "profile";
     private final ElementsCollection activeCategories;
     private final ElementsCollection archivedCategories;
     private final SelenideElement archiveButton;

@@ -42,7 +42,13 @@
 
     <div class="section">
         <h4>Response URL</h4>
-        <pre><code>${data.url}</code></pre>
+        <pre><code>
+        <#if data?? && data.url??>
+            ${data.url}
+        <#else>
+            No URL available
+        </#if>
+            </code></pre>
     </div>
 
     <#if (data.headers)?has_content>
