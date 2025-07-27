@@ -15,7 +15,7 @@ public interface UsersClient {
                 : new UserDBClient();
     }
     @Nonnull
-    UserJson createUser(String username, String password) throws Exception;
+    UserJson createUser(String username, String password);
     List<UserJson> createFriends(UserJson user, int count) throws Exception;
     List<UserJson> createIncomeInvitations(UserJson requester, int count) throws Exception;
     List<UserJson> createOutcomeInvitations(UserJson addressee, int count) throws Exception;

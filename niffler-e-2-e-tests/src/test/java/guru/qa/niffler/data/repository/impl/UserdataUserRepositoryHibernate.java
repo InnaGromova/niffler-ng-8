@@ -1,15 +1,14 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.entity.FriendshipEntity;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.repository.UserDataRepository;
 import guru.qa.niffler.values.FriendshipStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
@@ -57,18 +56,15 @@ public class UserdataUserRepositoryHibernate implements UserDataRepository {
         entityManager.joinTransaction();
         entityManager.remove(user);
     }
-
     @Override
-    public void addFriend(UserEntity requester, UserEntity addressee) {
+    public void addFriend(UserEntity user, UserEntity friend) {
         entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-        addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+        user.addFriends(FriendshipStatus.ACCEPTED, friend);
+        friend.addFriends(FriendshipStatus.ACCEPTED, user);
     }
-
     @Override
     public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        requester.addInvitations(requester);
+        addressee.addFriends(FriendshipStatus.PENDING, requester);
         updateUser(requester);
     }
 
@@ -76,5 +72,10 @@ public class UserdataUserRepositoryHibernate implements UserDataRepository {
     public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
         requester.addFriends(FriendshipStatus.PENDING, addressee);
         updateUser(requester);
+    }
+
+    @Override
+    public void clear() {
+        entityManager.clear();
     }
 }

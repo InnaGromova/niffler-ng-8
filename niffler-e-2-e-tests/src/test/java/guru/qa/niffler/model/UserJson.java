@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.UserEntity;
 import jaxb.userdata.FriendshipStatus;
-
-import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +57,9 @@ public record UserJson(
                         password,
                         testData.categories(),
                         testData.spendings(),
-                        testData.friendshipRequests(),
-                        testData.friendshipAddressees(),
-                        testData.friends()
+                        testData.friends(),
+                        testData.incomeInvitations(),
+                        testData.outcomeInvitations()
                 )
         );
     }

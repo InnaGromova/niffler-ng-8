@@ -140,6 +140,10 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
 
     }
 
+    @Override
+    public void clear() {
+
+    }
     private void addFriendshipRecord(PreparedStatement ps, UUID requesterId, UUID addresseeId, FriendshipStatus status) throws SQLException {
         ps.setObject(1, requesterId);
         ps.setObject(2, addresseeId);

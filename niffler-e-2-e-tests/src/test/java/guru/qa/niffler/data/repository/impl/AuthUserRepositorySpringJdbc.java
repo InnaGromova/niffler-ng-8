@@ -117,4 +117,8 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     public void remove(AuthUserEntity user) {
         jdbcTemplate.update("DELETE FROM \"user\" WHERE id = ?", user.getId());
     }
+
+    @Override
+    public void clear() {
+    }
 }

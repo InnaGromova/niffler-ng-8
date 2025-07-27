@@ -88,6 +88,10 @@ public class UserdataUserRepositorySpringJdbc implements UserDataRepository {
     public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
 
     }
+    @Override
+    public void clear() {
+
+    }
     public Object[] getFriendshipRecord(UUID requesterId, UUID addresseerId, FriendshipStatus status) {
         return new Object[]{requesterId, addresseerId, String.valueOf(status), new java.sql.Date(System.currentTimeMillis())};
     }

@@ -59,6 +59,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                         List<UserJson> outcomeInvitations = usersApiClient.getOutcomeInvitations(apiLoginUsername, null);
                         List<UserJson> incomeInvitations = usersApiClient.getIncomeInvitations(apiLoginUsername);
 
+
                         TestData testData = new TestData(
                                 apiLogin.password(),
                                 categories,

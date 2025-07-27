@@ -1,9 +1,8 @@
 package guru.qa.niffler.data.tpl;
 
-import com.atomikos.icatch.jta.UserTransactionImp;
+import com.atomikos.icatch.jta.UserTransactionManager;
+import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
-import jakarta.transaction.UserTransaction;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -14,6 +13,19 @@ public class XaTransactionTemplate {
 
     private final JdbcConnectionHolders holders;
     private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
+    private static final UserTransactionManager transactionManager;
+
+    static {
+        transactionManager = new UserTransactionManager();
+        transactionManager.setForceShutdown(false);
+        try {
+            transactionManager.init();
+            transactionManager.setTransactionTimeout(300);
+        } catch (SystemException e) {
+            throw new RuntimeException("Failed to initialize transaction manager", e);
+        }
+    }
+
 
     public XaTransactionTemplate(String... jdbcUrl) {
         this.holders = Connections.holders(jdbcUrl);
@@ -23,30 +35,32 @@ public class XaTransactionTemplate {
         this.closeAfterAction.set(false);
         return this;
     }
-
-    @SafeVarargs
     @Nullable
-    public final <T> T execute(Supplier<T>... actions) throws Exception {
-        UserTransaction ut = new UserTransactionImp();
+    public <T> T execute(Supplier<T> action) throws Exception {
+        int status = transactionManager.getStatus();
+        if (status != Status.STATUS_NO_TRANSACTION &&
+                status != Status.STATUS_UNKNOWN) {
+            return action.get();
+        }
+
         try {
-            ut.begin();
-            T result = null;
-            for (Supplier<T> action : actions) {
-                result = action.get();
+            transactionManager.begin();
+            T result = action.get();
+            if (transactionManager.getStatus() == Status.STATUS_ACTIVE) {
+                transactionManager.commit();
             }
-            ut.commit();
             return result;
         } catch (Exception e) {
             try {
-                ut.rollback();
+                int currentStatus = transactionManager.getStatus();
+                if (currentStatus == Status.STATUS_ACTIVE ||
+                        currentStatus == Status.STATUS_MARKED_ROLLBACK) {
+                    transactionManager.rollback();
+                }
             } catch (SystemException ex) {
-                throw new RuntimeException(ex);
+                e.addSuppressed(ex);
             }
-            throw new RuntimeException(e);
-        } finally {
-            if (closeAfterAction.get()) {
-                holders.close();
-            }
+            throw e;
         }
     }
 }

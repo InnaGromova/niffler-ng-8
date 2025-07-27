@@ -8,7 +8,7 @@ public record TestData(
         @JsonIgnore @NotNull String password,
         @JsonIgnore @NotNull List<CategoryJson> categories,
         @JsonIgnore @NotNull List<SpendJson> spendings,
-        @JsonIgnore @NotNull List<UserJson> friendshipRequests,
-        @JsonIgnore @NotNull List<UserJson> friendshipAddressees,
-        @JsonIgnore @NotNull List<UserJson> friends) {
+        @JsonIgnore @NotNull List<UserJson> friends,
+        @JsonIgnore @NotNull List<UserJson> incomeInvitations,
+        @JsonIgnore @NotNull List<UserJson> outcomeInvitations) {
 }

@@ -149,5 +149,9 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         }
     }
 
+    @Override
+    public void clear() {
+
+    }
 }
 

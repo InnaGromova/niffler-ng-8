@@ -17,4 +17,7 @@ public interface UserDataRepository {
     void addIncomeInvitation(UserEntity requester, UserEntity addressee);
 
     void addOutcomeInvitation(UserEntity requester, UserEntity addressee);
+
+    void clear();
+
 }

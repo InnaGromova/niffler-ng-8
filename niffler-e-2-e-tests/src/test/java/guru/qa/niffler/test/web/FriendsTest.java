@@ -2,7 +2,6 @@ package guru.qa.niffler.test.web;
 
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -39,7 +38,7 @@ public class FriendsTest {
     void checkFriendsTableForUserWithOutcomeRequest(UserJson user){
         System.out.println("Testing with user: " + user.username());
         open(FriendsPage.URL, FriendsPage.class)
-                .checkOutcomeRequest(String.valueOf(user.testData().friendshipRequests().getFirst().username()));
+                .checkOutcomeRequest(String.valueOf(user.testData().outcomeInvitations().getFirst().username()));
     }
     @Test
     @User(withInInvite = 1)
@@ -47,7 +46,7 @@ public class FriendsTest {
     void checkFriendsTableForUserWithIncomeRequest(UserJson user){
         System.out.println("Testing with user: " + user.username());
         open(FriendsPage.URL, FriendsPage.class)
-                .checkIncomeRequest(String.valueOf(user.testData().friendshipAddressees().getFirst().username()));
+                .checkIncomeRequest(String.valueOf(user.testData().incomeInvitations().getFirst().username()));
     }
     @Test
     @User(withInInvite = 1)
@@ -56,9 +55,9 @@ public class FriendsTest {
         System.out.println("Login: " + user.username());
         System.out.println("Password: " + user.testData().password());
         open(FriendsPage.URL, FriendsPage.class)
-                .checkIncomeRequest(String.valueOf(user.testData().friendshipAddressees().getFirst().username()))
-                .clickAcceptButtonForUser(String.valueOf(user.testData().friendshipAddressees().getFirst().username()))
-                .checkFriendWithSelectedUsername(String.valueOf(user.testData().friendshipAddressees().getFirst().username()));
+                .checkIncomeRequest(String.valueOf(user.testData().incomeInvitations().getFirst().username()))
+                .clickAcceptButtonForUser(String.valueOf(user.testData().incomeInvitations().getFirst().username()))
+                .checkFriendWithSelectedUsername(String.valueOf(user.testData().incomeInvitations().getFirst().username()));
     }
     @Test
     @User(withInInvite = 1)
@@ -66,8 +65,8 @@ public class FriendsTest {
     void checkRejectFriendRequest(UserJson user){
         System.out.println("Testing with user: " + user.username());
         open(FriendsPage.URL, FriendsPage.class)
-                .checkIncomeRequest(String.valueOf(user.testData().friendshipAddressees().getFirst().username()))
-                .clickRejectFriendshipButtonForName(String.valueOf(user.testData().friendshipAddressees().getFirst().username()))
+                .checkIncomeRequest(String.valueOf(user.testData().incomeInvitations().getFirst().username()))
+                .clickRejectFriendshipButtonForName(String.valueOf(user.testData().incomeInvitations().getFirst().username()))
                 .checkFriendIsEmpty();
     }
 }
