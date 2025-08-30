@@ -3,7 +3,7 @@ package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.SpendsApi;
@@ -86,7 +86,7 @@ public class SpendApiClient extends RestClient implements SpendsClient {
 
     @Override
     public List<SpendJson> getAllSpends(String username,
-                                        @Nullable CurrencyValues filterCurrency,
+                                        @Nullable Currency filterCurrency,
                                         @Nullable Date from,
                                         @Nullable Date to) {
         return Objects.requireNonNull(execute(spendApi.getAllSpends(username, filterCurrency, from, to)));

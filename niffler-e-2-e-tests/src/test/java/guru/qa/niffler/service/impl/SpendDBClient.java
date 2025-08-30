@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.service.*;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.SpendDao;
@@ -10,16 +10,15 @@ import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
-import guru.qa.niffler.data.repository.impl.*;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import org.jetbrains.annotations.Nullable;
+import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDBClient implements SpendsClient {
@@ -102,7 +101,7 @@ public class SpendDBClient implements SpendsClient {
     }
 
     @Override
-    public List<SpendJson> getAllSpends(String username, @Nullable CurrencyValues filterCurrency, @Nullable Date from, @Nullable Date to) {
+    public List<SpendJson> getAllSpends(String username, @Nullable Currency filterCurrency, @Nullable Date from, @Nullable Date to) {
         return null;
     }
 
@@ -110,4 +109,5 @@ public class SpendDBClient implements SpendsClient {
     public List<CategoryJson> getAllCategories(String username, boolean excludeArchived) {
         return null;
     }
+
 }

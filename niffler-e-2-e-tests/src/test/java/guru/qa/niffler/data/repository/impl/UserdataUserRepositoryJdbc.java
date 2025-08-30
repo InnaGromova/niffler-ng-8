@@ -3,7 +3,7 @@ package guru.qa.niffler.data.repository.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.repository.UserDataRepository;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.values.FriendshipStatus;
 
 import java.sql.PreparedStatement;
@@ -72,7 +72,7 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
                         UserEntity ue = new UserEntity();
                                 ue.setId(rs.getObject("id", UUID.class));
                                 ue.setUsername(rs.getString("username"));
-                                ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                                ue.setCurrency(Currency.valueOf(rs.getString("currency")));
                                 ue.setFirstname(rs.getString("firstname"));
                                 ue.setSurname(rs.getString("surname"));
                                 ue.setFullname(rs.getString("full_name"));
@@ -100,7 +100,7 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
                     UserEntity result = new UserEntity();
                     result.setId(rs.getObject("id", UUID.class));
                     result.setUsername(rs.getString("username"));
-                    result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    result.setCurrency(Currency.valueOf(rs.getString("currency")));
                     result.setFirstname(rs.getString("firstname"));
                     result.setSurname(rs.getString("surname"));
                     result.setPhoto(rs.getBytes("photo"));
@@ -164,7 +164,7 @@ public  class UserdataUserRepositoryJdbc implements UserDataRepository {
                         UserEntity ue = new UserEntity();
                                 ue.setId(rs.getObject("id", UUID.class));
                                 ue.setUsername(rs.getString("username"));
-                                ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                                ue.setCurrency(Currency.valueOf(rs.getString("currency")));
                                 ue.setFirstname(rs.getString("firstname"));
                                 ue.setSurname(rs.getString("surname"));
                                 ue.setFullname(rs.getString("full_name"));

@@ -3,7 +3,7 @@ import com.github.jknack.handlebars.internal.lang3.ArrayUtils;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendsClient;
@@ -44,7 +44,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                             username,
                                             false
                                     ),
-                                    CurrencyValues.RUB,
+                                    Currency.RUB,
                                     spendanno.amount(),
                                     spendanno.description(),
                                     username

@@ -2,7 +2,7 @@ package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -20,7 +20,7 @@ public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
         spend.setId(rs.getObject("id", UUID.class));
         spend.setUsername(rs.getString("username"));
         spend.setSpendDate(rs.getDate("spend_date"));
-        spend.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+        spend.setCurrency(Currency.valueOf(rs.getString("currency")));
         spend.setAmount(rs.getDouble("amount"));
         spend.setDescription(rs.getString("description"));
 

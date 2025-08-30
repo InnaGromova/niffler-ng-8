@@ -4,7 +4,7 @@ import guru.qa.niffler.service.impl.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,7 +34,7 @@ public class CreateSpendingExtension implements BeforeEachCallback {
                                       userAnno.username(),
                                       false
                               ),
-                              CurrencyValues.RUB,
+                              Currency.RUB,
                               spendingAnnotation.amount(),
                               spendingAnnotation.description(),
                               userAnno.username()

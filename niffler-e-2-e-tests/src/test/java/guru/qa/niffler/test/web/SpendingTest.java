@@ -9,7 +9,7 @@ import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.Bubble;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.*;
@@ -36,7 +36,7 @@ public class SpendingTest {
                   category = "Цветы",
                   description = "Тест",
                   amount = 3000.00,
-                  currency = CurrencyValues.RUB
+                  currency = Currency.RUB
           )
   )
     @Test
@@ -59,7 +59,7 @@ public class SpendingTest {
                   category = "Фитнес",
                   description = "Групповые занятия",
                   amount = 5000,
-                  currency = CurrencyValues.RUB
+                  currency = Currency.RUB
           )
   )
   @ApiLogin
@@ -80,13 +80,13 @@ public class SpendingTest {
                           category = "Освещение2",
                           description = "Студийный свет2",
                           amount = 2000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   ),
                   @Spend(
                           category = "Видеосвет2",
                           description = "Профессиональный видеосвет штатив2",
                           amount = 3000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   )
           }
 
@@ -103,13 +103,13 @@ public class SpendingTest {
                           category = "Освещение",
                           description = "Студийный свет",
                           amount = 2000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   ),
                   @Spend(
                           category = "Видеосвет",
                           description = "Профессиональный видеосвет штатив",
                           amount = 3000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   )
           }
 
@@ -135,19 +135,19 @@ public class SpendingTest {
                           category = "Йога",
                           description = "Абонемент",
                           amount = 2000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   ),
                   @Spend(
                           category = "Плаванье",
                           description = "Очки",
                           amount = 1000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   ),
                   @Spend(
                           category = "Бег",
                           description = "Костюм",
                           amount = 2000.00,
-                          currency = CurrencyValues.RUB
+                          currency = Currency.RUB
                   )
           }
 
@@ -165,19 +165,19 @@ public class SpendingTest {
                             category = "Рисование",
                             description = "Холст",
                             amount = 2000.00,
-                            currency = CurrencyValues.RUB
+                            currency = Currency.RUB
                     ),
                     @Spend(
                             category = "Продукты",
                             description = "Йогурт",
                             amount = 100.00,
-                            currency = CurrencyValues.RUB
+                            currency = Currency.RUB
                     ),
                     @Spend(
                             category = "Развлечения",
                             description = "Кино",
                             amount = 1000.00,
-                            currency = CurrencyValues.RUB
+                            currency = Currency.RUB
                     )
             }
 

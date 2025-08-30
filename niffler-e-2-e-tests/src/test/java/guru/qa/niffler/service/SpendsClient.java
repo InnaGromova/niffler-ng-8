@@ -1,7 +1,7 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public interface SpendsClient {
     SpendJson findSpendById(UUID id) throws Exception;
 
     List<SpendJson> getAllSpends(String username,
-                                 @Nullable CurrencyValues filterCurrency,
+                                 @Nullable Currency filterCurrency,
                                  @Nullable Date from,
                                  @Nullable Date to);
 

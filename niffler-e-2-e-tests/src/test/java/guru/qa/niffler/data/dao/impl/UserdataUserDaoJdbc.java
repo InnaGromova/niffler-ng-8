@@ -3,7 +3,7 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserDataDao;
 import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -70,7 +70,7 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
                         UserEntity ue = new UserEntity();
                                 ue.setId(rs.getObject("id", UUID.class));
                                 ue.setUsername(rs.getString("username"));
-                                ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                                ue.setCurrency(Currency.valueOf(rs.getString("currency")));
                                 ue.setFirstname(rs.getString("firstname"));
                                 ue.setSurname(rs.getString("surname"));
                                 ue.setFullname(rs.getString("full_name"));
@@ -99,7 +99,7 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
                     UserEntity result = new UserEntity();
                     result.setId(rs.getObject("id", UUID.class));
                     result.setUsername(rs.getString("username"));
-                    result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    result.setCurrency(Currency.valueOf(rs.getString("currency")));
                     result.setFirstname(rs.getString("firstname"));
                     result.setSurname(rs.getString("surname"));
                     result.setPhoto(rs.getBytes("photo"));
@@ -126,7 +126,7 @@ public  class UserdataUserDaoJdbc implements UserDataDao {
                         UserEntity ue = new UserEntity();
                                 ue.setId(rs.getObject("id", UUID.class));
                                 ue.setUsername(rs.getString("username"));
-                                ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                                ue.setCurrency(Currency.valueOf(rs.getString("currency")));
                                 ue.setFirstname(rs.getString("firstname"));
                                 ue.setSurname(rs.getString("surname"));
                                 ue.setFullname(rs.getString("full_name"));
