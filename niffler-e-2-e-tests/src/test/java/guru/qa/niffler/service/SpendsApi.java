@@ -1,6 +1,6 @@
 package guru.qa.niffler.service;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.SpendJson;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -18,7 +18,7 @@ public interface SpendsApi {
 
     @GET("internal/spends/all")
     Call<List<SpendJson>> getAllSpends(@Query("username") String username,
-                                       @Query("filterCurrency") CurrencyValues currency,
+                                       @Query("filterCurrency") Currency currency,
                                        @Query("from") Date from,
                                        @Query("to") Date to);
 

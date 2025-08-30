@@ -5,7 +5,7 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -96,7 +96,7 @@ public class SpendDaoJdbc implements SpendDao {
                     SpendEntity se = new SpendEntity();
                     se.setId(rs.getObject("id", UUID.class));
                     se.setUsername(rs.getString("username"));
-                    se.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    se.setCurrency(Currency.valueOf(rs.getString("currency")));
                     se.setSpendDate(rs.getObject("spend_date", Date.class));
                     se.setAmount(rs.getDouble("amount"));
                     se.setDescription(rs.getString("description"));
@@ -123,7 +123,7 @@ public class SpendDaoJdbc implements SpendDao {
                         SpendEntity se = new SpendEntity();
                         se.setId(rs.getObject("id", UUID.class));
                         se.setUsername(rs.getString("username"));
-                        se.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                        se.setCurrency(Currency.valueOf(rs.getString("currency")));
                         se.setSpendDate(rs.getObject("spend_date", Date.class));
                         se.setAmount(rs.getDouble("amount"));
                         se.setDescription(rs.getString("description"));
@@ -172,7 +172,7 @@ public class SpendDaoJdbc implements SpendDao {
             spendEntity.setId(rs.getObject("id", UUID.class));
             spendEntity.setUsername(rs.getString("username"));
             spendEntity.setSpendDate(rs.getDate("spend_date"));
-            spendEntity.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+            spendEntity.setCurrency(Currency.valueOf(rs.getString("currency")));
             spendEntity.setAmount(rs.getDouble("amount"));
             spendEntity.setDescription(rs.getString("description"));
             categoryEntity.setId(rs.getObject("category_id", UUID.class));

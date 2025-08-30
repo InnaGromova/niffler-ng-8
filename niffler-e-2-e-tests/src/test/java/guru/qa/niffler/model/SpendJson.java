@@ -16,7 +16,7 @@ public record SpendJson(
     @JsonProperty("category")
     CategoryJson category,
     @JsonProperty("currency")
-    CurrencyValues currency,
+    Currency currency,
     @JsonProperty("amount")
     Double amount,
     @JsonProperty("description")

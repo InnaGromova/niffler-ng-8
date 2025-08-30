@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.entity;
 
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.values.FriendshipStatus;
 import jakarta.persistence.*;
@@ -27,7 +27,7 @@ public class UserEntity implements Serializable {
     private String username;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CurrencyValues currency;
+    private Currency currency;
     @Column()
     private String firstname;
     @Column()

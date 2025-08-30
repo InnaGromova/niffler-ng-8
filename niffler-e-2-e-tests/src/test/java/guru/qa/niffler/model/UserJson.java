@@ -21,7 +21,7 @@ public record UserJson(
         @JsonProperty("fullname")
         String fullname,
         @JsonProperty("currency")
-        CurrencyValues currency,
+        Currency currency,
         @JsonProperty("photo")
         String photo,
         @JsonProperty("photoSmall")

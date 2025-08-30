@@ -8,11 +8,9 @@ import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserDataRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.Currency;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.utils.RandomData;
-import jakarta.persistence.EntityManager;
 import jaxb.userdata.FriendshipStatus;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.AuthAuthorityEntity;
@@ -169,7 +167,7 @@ public class UserDBClient implements UsersClient {
     private UserEntity userEntity(String username) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(username);
-        userEntity.setCurrency(CurrencyValues.RUB);
+        userEntity.setCurrency(Currency.RUB);
         return userEntity;
     }
 

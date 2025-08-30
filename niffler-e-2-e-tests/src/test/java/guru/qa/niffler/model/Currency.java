@@ -3,7 +3,7 @@ package guru.qa.niffler.model;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum CurrencyValues {
+public enum Currency {
   RUB("₽"),
   USD("$"),
   EUR("€"),
