@@ -1,18 +1,22 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.utils.RandomDataUtils;
+import guru.qa.niffler.utils.RandomData;
+import guru.qa.niffler.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
 public class RegistrationTest {
     private static final Config CFG = Config.getInstance();
+    private final SelenideDriver driver = new SelenideDriver(SelenideUtils.chromeConfig);
     @Test
     public void checkingAdditionNewUser (){
-        String login = RandomDataUtils.randomUserName();
-        String password = RandomDataUtils.randomUserPassword();
+        String login = RandomData.randomUserName();
+        String password = RandomData.randomUserPassword();
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .clickaddNewUserButton()
                 .addNewUser(login, password, password )
                 .checkingTheUserAddition();
@@ -20,10 +24,10 @@ public class RegistrationTest {
     @Test
     public void checkingImpossibleRegisterUserWithExistingLogin(){
         String login = "test-user1";
-        String password = RandomDataUtils.randomUserPassword();
+        String password = RandomData.randomUserPassword();
         String errorText = "Username `" + login + "` already exists";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .clickaddNewUserButton()
                 .addNewUser(login, password, password)
                 .checkingErrorText(errorText);
@@ -31,12 +35,12 @@ public class RegistrationTest {
 
     @Test
     public void checkingImpossibleRegisterUserWithDifferentPasswordAndRepeatPassword(){
-        String login = RandomDataUtils.randomUserName();
-        String password = RandomDataUtils.randomUserPassword();
-        String repeatPassword = RandomDataUtils.randomUserPassword();
+        String login = RandomData.randomUserName();
+        String password = RandomData.randomUserPassword();
+        String repeatPassword = RandomData.randomUserPassword();
         String errorText = "Passwords should be equal";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .clickaddNewUserButton()
                 .addNewUser(login, password, repeatPassword)
                 .checkingErrorText(errorText);

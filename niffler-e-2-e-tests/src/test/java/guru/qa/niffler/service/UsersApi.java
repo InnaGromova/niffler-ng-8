@@ -1,5 +1,5 @@
 package guru.qa.niffler.service;
-import guru.qa.niffler.model.UserJson;
+
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.POST;

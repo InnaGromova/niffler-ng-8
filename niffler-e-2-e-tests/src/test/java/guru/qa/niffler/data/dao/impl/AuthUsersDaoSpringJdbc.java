@@ -11,15 +11,19 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@ParametersAreNonnullByDefault
 public class AuthUsersDaoSpringJdbc implements AuthUserDao {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    @Nonnull
     @Override
     public AuthUserEntity create(AuthUserEntity authUser) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -42,6 +46,7 @@ public class AuthUsersDaoSpringJdbc implements AuthUserDao {
         authUser.setId(generatedKey);
         return authUser;
     }
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -53,7 +58,7 @@ public class AuthUsersDaoSpringJdbc implements AuthUserDao {
                 )
         );
     }
-
+    @Nonnull
     @Override
     public List<AuthUserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -62,6 +67,7 @@ public class AuthUsersDaoSpringJdbc implements AuthUserDao {
                 AuthUserEntityRowMapper.instance
         );
     }
+
     @Override
     public List<AuthUserEntity> findAllWithAuthorities() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -74,6 +80,7 @@ public class AuthUsersDaoSpringJdbc implements AuthUserDao {
                 new AuthUserWithAuthoritiesExtractor()
         );
     }
+    @Nonnull
     @Override
     public AuthUserEntity update(AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

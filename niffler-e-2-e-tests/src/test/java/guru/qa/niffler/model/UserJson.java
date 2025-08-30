@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.UserEntity;
 import jaxb.userdata.FriendshipStatus;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public record UserJson(
@@ -26,9 +26,11 @@ public record UserJson(
         String photo,
         @JsonProperty("photoSmall")
         String photoSmall,
+        @JsonProperty("friendshipStatus")
+        FriendshipStatus friendshipStatus,
         @JsonIgnore
         TestData testData) {
-    public static UserJson fromEntity(UserEntity entity, Object o) {
+    public static UserJson fromEntity(UserEntity entity, FriendshipStatus friendshipStatus) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),
@@ -38,6 +40,7 @@ public record UserJson(
                 entity.getCurrency(),
                 entity.getPhoto() != null && entity.getPhoto().length > 0 ? new String(entity.getPhoto(), StandardCharsets.UTF_8) : null,
                 entity.getPhotoSmall() != null && entity.getPhotoSmall().length > 0 ? new String(entity.getPhotoSmall(), StandardCharsets.UTF_8) : null,
+                friendshipStatus,
                 new TestData(
                         null,
                         new ArrayList<>(),
@@ -54,9 +57,9 @@ public record UserJson(
                         password,
                         testData.categories(),
                         testData.spendings(),
-                        testData.friendshipRequests(),
-                        testData.friendshipAddressees(),
-                        testData.friends()
+                        testData.friends(),
+                        testData.incomeInvitations(),
+                        testData.outcomeInvitations()
                 )
         );
     }
@@ -70,7 +73,28 @@ public record UserJson(
                 currency,
                 photo,
                 photoSmall,
+                friendshipStatus,
                 testData);
+    }
+    public UserJson withUsers(List<UserJson> friends,
+                              List<UserJson> outcomeInvitations,
+                              List<UserJson> incomeInvitations) {
+        return withTestData(
+                new TestData(
+                        testData.password(),
+                        testData.categories(),
+                        testData.spendings(),
+                        friends,
+                        outcomeInvitations,
+                        incomeInvitations
+                )
+        );
+    }
+    public UserJson(String username) {
+        this(username, null);
+    }
+    public UserJson(String username, TestData testData) {
+        this(null, username, null, null, null, null, null, null, null, testData);
     }
 
 }

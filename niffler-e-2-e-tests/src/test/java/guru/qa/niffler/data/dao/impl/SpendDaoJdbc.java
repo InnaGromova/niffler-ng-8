@@ -7,14 +7,17 @@ import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
+    @Nonnull
     @Override
     public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -44,6 +47,7 @@ public class SpendDaoJdbc implements SpendDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -64,6 +68,7 @@ public class SpendDaoJdbc implements SpendDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -78,7 +83,7 @@ public class SpendDaoJdbc implements SpendDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -104,7 +109,7 @@ public class SpendDaoJdbc implements SpendDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public List<SpendEntity> findAllByUsername(String username) {
             try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -132,6 +137,7 @@ public class SpendDaoJdbc implements SpendDao {
             throw new RuntimeException(e);
         }
     }
+    @Nonnull
     @Override
     public List<SpendEntity> findAll() {
         List<SpendEntity> spendEntities = new ArrayList<>();

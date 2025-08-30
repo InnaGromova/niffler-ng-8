@@ -5,6 +5,10 @@ import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
 import java.sql.*;
@@ -12,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@ParametersAreNonnullByDefault
 public class AuthUserDaoJdbc implements AuthUserDao {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
+    @Nonnull
     @Override
     public AuthUserEntity create(AuthUserEntity authUser) {
             try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -45,12 +49,12 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         return Optional.empty();
     }
-
+    @Nonnull
     @Override
     public List<AuthUserEntity> findAll() {
 
@@ -79,12 +83,12 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
         return authUserEntities;
     }
-
+    @Nonnull
     @Override
     public List<AuthUserEntity> findAllWithAuthorities() {
         return null;
     }
-
+    @Nonnull
     @Override
     public AuthUserEntity update(AuthUserEntity user) {
         return null;

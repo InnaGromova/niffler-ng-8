@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.data.entity.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +14,5 @@ public interface AuthUserRepository {
     Optional<AuthUserEntity> findByUserName (String username);
     List<AuthUserEntity> findAll();
     void remove (AuthUserEntity user);
+    void clear();
 }

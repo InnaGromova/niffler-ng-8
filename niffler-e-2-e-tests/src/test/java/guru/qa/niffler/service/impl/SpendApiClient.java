@@ -1,30 +1,45 @@
 package guru.qa.niffler.service.impl;
 
-import guru.qa.niffler.api.SpendApi;
+
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.RestClient;
+import guru.qa.niffler.service.SpendsApi;
 import guru.qa.niffler.service.SpendsClient;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
-public class SpendApiClient implements SpendsClient {
+public class SpendApiClient extends RestClient implements SpendsClient {
     private static final Config CFG = Config.getInstance();
-    private final OkHttpClient client = new OkHttpClient.Builder().build();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .addNetworkInterceptor(
+                    new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addNetworkInterceptor(
+                    new AllureOkHttp3()
+                            .setRequestTemplate("request.ftl")
+                            .setResponseTemplate("response.ftl")
+            ).build();
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(CFG.spendUrl())
             .client(client)
             .addConverterFactory(JacksonConverterFactory.create())
             .build();
-    private final SpendApi spendApi = retrofit.create(SpendApi.class);
+    private final SpendsApi spendApi = retrofit.create(SpendsApi.class);
+    public SpendApiClient() {
+        super(CFG.spendUrl());
+    }
 
     private <T> T executeCall(Call<T> call){
         final Response<T> response;
@@ -61,11 +76,31 @@ public class SpendApiClient implements SpendsClient {
 
     @Override
     public void deleteSpend(SpendJson spendJson) throws Exception {
-        executeCall(spendApi.deleteSpends(spendJson.username(), Collections.singletonList(spendJson.id().toString())));
+        executeCall(spendApi.removeSpend(spendJson.username(), Collections.singletonList(spendJson.id().toString())));
     }
 
     @Override
     public SpendJson findSpendById(UUID id) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<SpendJson> getAllSpends(String username,
+                                        @Nullable CurrencyValues filterCurrency,
+                                        @Nullable Date from,
+                                        @Nullable Date to) {
+        return Objects.requireNonNull(execute(spendApi.getAllSpends(username, filterCurrency, from, to)));
+    }
+    @Override
+    public List<CategoryJson> getAllCategories(String username, boolean excludeArchived) {
+        try {
+            Response<List<CategoryJson>> response = spendApi.getCategories(username, excludeArchived).execute();
+            if (!response.isSuccessful()) {
+                throw new RuntimeException("Request failed with status code: " + response.code());
+            }
+            return response.body();
+        } catch (IOException e) {
+            throw new RuntimeException("Error during HTTP request", e);
+        }
     }
 }

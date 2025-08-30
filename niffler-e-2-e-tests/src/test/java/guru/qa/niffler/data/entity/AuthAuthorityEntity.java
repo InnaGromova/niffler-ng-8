@@ -1,5 +1,5 @@
 package guru.qa.niffler.data.entity;
-import guru.qa.niffler.values.AuthorityType;
+import guru.qa.niffler.model.AuthorityJson;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class AuthAuthorityEntity implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AuthorityType authority;
+    private Authority authority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -53,5 +53,12 @@ public class AuthAuthorityEntity implements Serializable {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+    public static AuthAuthorityEntity fromJson(AuthorityJson json) {
+        AuthAuthorityEntity authAuthority = new AuthAuthorityEntity();
+        authAuthority.setId(json.id());
+        authAuthority.getUser().setId(json.userId());
+        authAuthority.setAuthority(json.authority());
+        return authAuthority;
     }
 }

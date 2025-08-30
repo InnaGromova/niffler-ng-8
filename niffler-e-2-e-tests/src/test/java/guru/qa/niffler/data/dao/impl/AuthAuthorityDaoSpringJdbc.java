@@ -7,14 +7,17 @@ import guru.qa.niffler.data.mapper.AuthorityEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-
+@ParametersAreNonnullByDefault
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     private static final Config CFG = Config.getInstance();
-
+    @Nonnull
     @Override
     public AuthAuthorityEntity create(AuthAuthorityEntity... authorities) {
         for (AuthAuthorityEntity authority : authorities) {
@@ -40,6 +43,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         );
         return authorities[0];
     }
+    @Nonnull
     @Override
     public List<AuthAuthorityEntity> findByUserId(UUID userId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

@@ -8,6 +8,9 @@ import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,10 +19,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
+@ParametersAreNonnullByDefault
 public class UserDataDaoSpringJdbc implements UserDataDao {
     private static final Config CFG = Config.getInstance();
-
+    @Nonnull
     @Override
     public UserEntity createUser(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
@@ -43,6 +46,7 @@ public class UserDataDaoSpringJdbc implements UserDataDao {
         user.setId(generatedKey);
         return user;
     }
+    @Nonnull
     @Override
     public UserEntity update(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -61,7 +65,7 @@ public class UserDataDaoSpringJdbc implements UserDataDao {
             throw new RuntimeException(e);
         }
     }
-
+    @Nonnull
     @Override
     public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
@@ -73,7 +77,7 @@ public class UserDataDaoSpringJdbc implements UserDataDao {
                 )
         );
     }
-
+    @Nonnull
     @Override
     public List<UserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
@@ -82,7 +86,7 @@ public class UserDataDaoSpringJdbc implements UserDataDao {
                 UserDataUserEntityRowMapper.instance
         );
     }
-
+    @Nonnull
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
@@ -94,7 +98,6 @@ public class UserDataDaoSpringJdbc implements UserDataDao {
                 )
         );
     }
-
     @Override
     public void delete(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

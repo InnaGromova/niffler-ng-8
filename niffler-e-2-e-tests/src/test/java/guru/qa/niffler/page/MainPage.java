@@ -1,56 +1,125 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
+import guru.qa.niffler.condition.SpendConditions;
+import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.utils.ScreenDiffResult;
+import io.qameta.allure.Step;
+
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class MainPage {
+public class MainPage extends BasePage<MainPage> {
+  public static final String URL = CFG.frontUrl() + "main";
 
-  private final ElementsCollection tableRows = $$("#spendings tbody tr");
-  private final SelenideElement spendingTable = $("#spendings");
-  private final SelenideElement headerBlock = $("#root header");
-  private final SelenideElement menu = $("ul[role='menu']");
-  private final SelenideElement avatar = $("svg[data-testid='PersonIcon']");
-  private final SelenideElement profile = $("li[role='menuitem'] a[href='/profile']");
-  private final SelenideElement friends = $("li[role='menuitem'] a[href='/people/friends']");
-  private final SelenideElement searchField = $("input[placeholder='Search']");
+  private final ElementsCollection tableRows;
+  private final SelenideElement spendingTable;
+  private final SelenideElement headerBlock;
+  private final SelenideElement avatar;
+  private final SelenideElement searchField;
+  private final SelenideElement diagram;
+  private final SelenideElement addNewSpendingButton;
+  private final ElementsCollection statCategories;
+  private final ElementsCollection menuItems;
+  private SpendTable spendTable = new SpendTable();
+  private StatComponent statComponent = new StatComponent();
 
-  public EditSpendingPage editSpending(String spendingDescription) {
-    findSpending(spendingDescription);
-    tableRows.find(text(spendingDescription))
-        .$$("td")
-        .get(5)
-        .click();
-    return new EditSpendingPage();
+  public MainPage(){
+    this.tableRows = $$("#spendings tbody tr");
+    this.spendingTable = $("#spendings");
+    this.headerBlock = $("#root header");
+    this.avatar = $("svg[data-testid='PersonIcon']");
+    this.searchField = $("input[placeholder='Search']");
+    this.diagram = $("canvas[role='img']");
+    this.statCategories = $$("#legend-container li");
+    this.addNewSpendingButton = headerBlock.$("a[href='/spending']");
+    this.menuItems = headerBlock.parent().parent().$$("[role='menuitem']");
   }
-  public void findSpending(String spendingDescription) {
-    searchField.setValue(spendingDescription).pressEnter();
+  public SpendTable getSpendTable() {
+    return spendTable;
   }
-
+  public StatComponent getStatComponent() {
+    Selenide.sleep(10000);
+    return statComponent;
+  }
+  @Nonnull
+  @Step("Check contents of table with spends")
   public void checkThatTableContains(String spendingDescription) {
     tableRows.find(text(spendingDescription))
         .should(visible);
   }
+  @Nonnull
+  @Step("Check main page open")
   public void checkMainPageOpened() {
     spendingTable.shouldBe(visible);
     headerBlock.shouldBe(visible);
   }
-  public MainPage openMenuProfile() {
-    headerBlock.shouldBe(visible);
+  @Nonnull
+  @Step("Go to Profile")
+  public ProfilePage openMenuProfile() {
     avatar.click();
-    menu.shouldBe(visible);
-    profile.click();
+    menuItems.findBy(text("Profile")).click();
+    return new ProfilePage();
+  }
+  @Nonnull
+  @Step("Go to Friends")
+  public FriendsPage openFriends() {
+    avatar.click();
+    menuItems.findBy(text("Friends")).click();
+    return new FriendsPage();
+  }
+  @Nonnull
+  @Step("Go to All People")
+  public AllPeoplePage openMenuAllPeople() {
+    avatar.click();
+    menuItems.findBy(text("All People")).click();
+    return new AllPeoplePage();
+  }
+  @Nonnull
+  @Step("Go to All People")
+  public AddSpendingPage openAddSpendingPage() {
+    addNewSpendingButton.shouldBe(visible).click();
+    return new AddSpendingPage();
+  }
+  @Nonnull
+  @Step("Sign Out")
+  public LoginPage signOut() {
+    avatar.click();
+    menuItems.findBy(text("Sign Out")).click();
+    return new LoginPage();
+  }
+  @Nonnull
+  @Step("Checking Diagramm")
+  public MainPage checkDiagramm(BufferedImage expected) throws IOException {
+    Selenide.sleep(10000);
+    BufferedImage actual = ImageIO.read(Objects.requireNonNull(diagram.screenshot()));
+    assertFalse(new ScreenDiffResult(
+            expected,
+            actual
+    ));
     return this;
   }
-  public MainPage openFriends() {
-    headerBlock.shouldBe(visible);
-    avatar.click();
-    menu.shouldBe(visible);
-    friends.click();
+  @Nonnull
+  @Step("Checking Categories")
+  public MainPage shouldHaveStatSpend(List<String> expectedCategories) {
+    statCategories.shouldHave(CollectionCondition.texts(expectedCategories));
+    return this;
+  }
+  @Nonnull
+  @Step("Checking Table with Spends")
+  public MainPage checkSpendsTable(SpendJson... expectedSpends) {
+    Selenide.sleep(10000);
+    spendTable.getTableRows().should(SpendConditions.spends(expectedSpends));
     return this;
   }
 }
